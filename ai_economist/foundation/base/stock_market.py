@@ -13,11 +13,11 @@ class StockMarket:
         self.price = 0
             
     def simulate(self, no_days):
-        self.sim_price = simulate_stock_price(self.data, no_days)
+        self.sim_price = self.simulate_stock_price(self.data, no_days)
         self.price = self.sim_price[-1]
     
     def nextstep(self):
-        next_step = simulate_one_step(self.data, self.price)
+        next_step = self.simulate_one_step(self.data, self.price)
         self.sim_price = np.concatenate((self.sim_price, [next_step]))    
         self.price = next_step
         
