@@ -8,7 +8,7 @@ class StockMarket:
     
     def __init__(self, stock_symbol):
         self.stock_symbol = stock_symbol
-        self.data = yf.download('MSFT')
+        self.data = yf.download(stock_symbol)
         self.sim_price = []
         self.price = 0
             
