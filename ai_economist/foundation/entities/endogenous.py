@@ -34,3 +34,43 @@ class Labor(Endogenous):
     """Labor accumulated through working. Included in all environments by default."""
 
     name = "Labor"
+    
+@endogenous_registry.add
+class TotalBalance(Endogenous):
+    """The amount of money a person holds (stocks + available funds)"""
+
+    name = "TotalBalance"
+    
+@endogenous_registry.add
+class AvailableFunds(Endogenous):
+    """The amount of available funds a person holds"""
+
+    name = "AvailableFunds"
+    
+@endogenous_registry.add
+class NumberOfStocks(Endogenous):
+    """The amount of stocks a person holds"""
+
+    name = "NumberOfStocks"
+    
+@endogenous_registry.add
+class StockPrice(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPrice"
+
+@endogenous_registry.add
+class AbleToBuy(Endogenous):
+    """Determines if an agent is able to buy or not"""
+
+    name = "AbleToBuy"
+    
+@endogenous_registry.add
+class AbleToSell(Endogenous):
+    """Determines if an agent is able to sell or not"""
+
+    name = "AbleToSell"
+    
+    
+
+

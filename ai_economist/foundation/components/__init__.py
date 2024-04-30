@@ -13,6 +13,8 @@ from . import (
     move,
     redistribution,
     simple_labor,
+    buysell_stocks,
+    circuit_breaker,
 )
 
 # Import files that add Component class(es) to component_registry
