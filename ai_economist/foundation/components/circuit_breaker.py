@@ -49,14 +49,14 @@ class ExecCircuitBreaker(BaseComponent):
             # Let the market run its course and don't block trading
             if planner_action == 0:
                 for agent in self.world.get_random_order_agents():
-                    agent.state["endogenous"]["AbleToBuy"] = True
-                    agent.state["endogenous"]["AbleToSell"] = True
+                    agent.state["endogenous"]["AbleToBuy"] = 0.0
+                    agent.state["endogenous"]["AbleToSell"] = 0.0
 
             # Execute circuit breaker and block trading
             if planner_action == 1:
                 for agent in self.world.get_random_order_agents():
-                    agent.state["endogenous"]["AbleToBuy"] = False
-                    agent.state["endogenous"]["AbleToSell"] = False
+                    agent.state["endogenous"]["AbleToBuy"] = 1.0
+                    agent.state["endogenous"]["AbleToSell"] = 1.0
                 
         
         else: 

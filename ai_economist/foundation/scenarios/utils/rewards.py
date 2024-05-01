@@ -131,3 +131,21 @@ def inv_income_weighted_utility(coin_endowments, utilities):
     pareto_weights = 1 / np.maximum(coin_endowments, 1)
     pareto_weights = pareto_weights / np.sum(pareto_weights)
     return np.sum(utilities * pareto_weights)
+
+
+def agent_reward_total(balance, max_balance):
+    return balance/max_balance
+    
+def planner_metric_stability(prices):
+    return np.std([prices[i] - prices[i-1] for i in range(1, len(prices))])
+
+    
+def planner_metric_liquidity(volume_today, volumes):
+    volume_average = np.average(volumes)
+    if volume_today >= volume_average
+        return 1.0
+    else
+        return 0.0
+    
+def planner_reward_total(prices, volumes, volume_today):
+    return 0.5*planner_metric_stability(prices),0.5*planner_metric_liquidity(volume_today, volumes)

@@ -58,6 +58,24 @@ class StockPrice(Endogenous):
     """The price of a stock"""
 
     name = "StockPrice"
+    
+@endogenous_registry.add
+class StockPriceHistory(Endogenous):
+    """The history of the price of a stock"""
+
+    name = "StockPriceHistory"
+    
+@endogenous_registry.add
+class Demand(Endogenous):
+    """The amount of demand a user has in this timestep for a certain stock"""
+
+    name = "Demand"
+
+@endogenous_registry.add
+class Supply(Endogenous):
+    """The amount of supply a user has in this timestep for a certain stock"""
+
+    name = "Supply"
 
 @endogenous_registry.add
 class AbleToBuy(Endogenous):
@@ -70,6 +88,12 @@ class AbleToSell(Endogenous):
     """Determines if an agent is able to sell or not"""
 
     name = "AbleToSell"
+
+@endogenous_registry.add
+class Volumes(Endogenous):
+    """Keeps track of the volumes (demand+supply)"""
+
+    name = "Volumes"
     
     
 

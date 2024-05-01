@@ -5,7 +5,7 @@ from ai_economist.foundation.base.base_component import BaseComponent, component
 @component_registry.add
 class BuyOrSellStocks(BaseComponent):
     name = "BuyOrSellStocks"
-    required_entities = ["TotalBalance", "AvailableFunds", "NumberOfStocks", "StockPrice", "AbleToBuy", "AbleToSell"]
+    required_entities = ["TotalBalance", "AvailableFunds", "NumberOfStocks", "StockPrice", "StockPriceHistory", "Demand", "Supply", "AbleToBuy", "AbleToSell"]
     agent_subclasses = ["BasicMobileAgent"]
 
     def __init__(
@@ -61,7 +61,7 @@ class BuyOrSellStocks(BaseComponent):
                 able_to_sell = agent.state["endogenous"]["AbleToSell"]
 
                       
-                if action <= 10 and able_to_buy: # Agent wants to buy stocks
+                if action <= 10 and able_to_buy == 0: # Agent wants to buy stocks
                     # Compute what maximum amount of stocks able to buy is
                     max_stocks_buy = (available_funds - (available_funds * transaction_cost)) // stock_price
                     
@@ -74,8 +74,11 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["AvailableFunds"] -= cost_to_buy
                     agent.state["endogenous"]["NumberOfStocks"] += stocks_to_buy
                     agent.state["endogenous"]["TotalBalance"] = agent.state["endogenous"]["AvailableFunds"] + (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] - (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] * transaction_cost))
+                    agent.state["endogenous"]["Demand"] = stocks_to_buy
+                    agent.state["endogenous"]["Supply"] = 0.0
+
                     
-                if 10 < action <= 20 and able_to_sell: # Agent wants to sell stocks
+                if 10 < action <= 20 and able_to_sell == 0: # Agent wants to sell stocks
                     # Compute how much stocks agent wants to sell (each integer step in action is 10%)
                     sell_percentage = (action-10) * 0.10
                     stocks_to_sell = math.floor(number_of_stocks * sell_percentage)
@@ -86,12 +89,15 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["AvailableFunds"] += proceeds_from_sell - transaction_cost_amount
                     agent.state["endogenous"]["NumberOfStocks"] -= stocks_to_sell
                     agent.state["endogenous"]["TotalBalance"] = agent.state["endogenous"]["AvailableFunds"] + (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] - (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] * transaction_cost))
+                    agent.state["endogenous"]["Demand"] = 0.0
+                    agent.state["endogenous"]["Supply"] = stocks_to_sell
                     
                 # Commenting this out is same as having the if-statement be useless
-                #if action == 21: # Agent wants to keep stocks
-                    # Do nothing.
+                if action == 21: # Agent wants to keep stocks
+                    agent.state["endogenous"]["Demand"] = 0.0
+                    agent.state["endogenous"]["Supply"] = 0.0
 
-            else: # We only declared 20 actions for this agent type, so action > 20 is an error.
+            else: # We only declared 21 actions for this agent type, so action > 21 is an error.
                 raise ValueError
             
             
