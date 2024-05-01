@@ -15,7 +15,7 @@ from ai_economist.foundation.base.stock_market import StockMarket
 
 
 @scenario_registry.add
-class stock_market_simulation(BaseEnvironment):
+class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StockPriceHistory", "Demand", "Supply", "Volumes"]
