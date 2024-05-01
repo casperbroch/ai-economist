@@ -229,7 +229,7 @@ class StockMarketSimulation(BaseEnvironment):
         for agent in agents:
             if agent.state["endogenous"]["TotalBalance"] > max_balance:
                 max_balance = agent.state["endogenous"]["TotalBalance"]
-                volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
+                today_volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
         
         # Find prices and volumes arrays
         prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
