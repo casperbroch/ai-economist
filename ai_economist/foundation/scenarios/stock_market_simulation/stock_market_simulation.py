@@ -19,7 +19,7 @@ class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StockPriceHistory", "Demand", "Supply", "Volumes"]
-    market = StockMarket("MSFT")
+    self.market = StockMarket("MSFT")
 
 
     def __init__(
@@ -30,6 +30,7 @@ class StockMarketSimulation(BaseEnvironment):
         super().__init__(*base_env_args, **base_env_kwargs)
         self.num_agents = len(self.world.agents)
         self.curr_optimization_metrics = {str(a.idx): 0.0 for a in self.all_agents}
+
 
 
 
@@ -63,8 +64,8 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
             agent.state["endogenous"]["TotalBalance"] = starting_funds
             
-            agent.state["endogenous"]["StockPrice"] = self.market.price
-            agent.state["endogenous"]["StockPriceHistory"] = np.array([self.market.price])
+            agent.state["endogenous"]["StockPrice"] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceHistory"] = np.array([self.market.getprice()])
             agent.state["endogenous"]["Volumes"] = np.array([0])
 
             
@@ -86,8 +87,8 @@ class StockMarketSimulation(BaseEnvironment):
         
         # Update market price within agent state
         for agent in self.world.agents:
-            agent.state["endogenous"]["StockPrice"] = self.market.price
-            agent.state["endogenous"]["StockPriceHistory"] = np.append(agent.state["endogenous"]["StockPriceHistory"], self.market.price)
+            agent.state["endogenous"]["StockPrice"] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceHistory"] = np.append(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
 
             volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
             agent.state["endogenous"]["Volumes"] = np.append(agent.state["endogenous"]["Volumes"], volume)

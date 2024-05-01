@@ -21,7 +21,9 @@ class StockMarket:
         self.sim_price = np.concatenate((self.sim_price, [next_step]))    
         self.price = next_step
         
-
+    def getprice(self):
+        return self.price
+        
     def simulate_stock_price(self, days):
         returns = np.log(1 + self.data['Adj Close'].pct_change())
         mu, sigma = returns.mean(), returns.std()
