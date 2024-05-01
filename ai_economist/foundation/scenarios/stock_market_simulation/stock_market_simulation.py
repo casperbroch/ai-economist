@@ -241,7 +241,7 @@ class StockMarketSimulation(BaseEnvironment):
             curr_optimization_metric[
                 agent.idx
             ] = rewards.agent_reward_total(
-                agent.state["endogenous"],
+                agent.state["endogenous"]["TotalBalance"],
                 max_balance
             )
         
