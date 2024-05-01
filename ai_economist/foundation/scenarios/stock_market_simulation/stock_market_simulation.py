@@ -33,7 +33,6 @@ class StockMarketSimulation(BaseEnvironment):
 
 
 
-
     # The following methods must be implemented for each scenario
     # -----------------------------------------------------------
     def reset_starting_layout(self):
@@ -51,7 +50,8 @@ class StockMarketSimulation(BaseEnvironment):
         Here, empty inventories, give mobile agents any starting coin, and place them
         in random accesible locations to start.
         """
-        self.market = StockMarket("MSFT").simulate(1)
+        self.market = StockMarket("MSFT")
+        self.market.simulate(1)
 
         self.world.clear_agent_locs()
 
@@ -81,7 +81,7 @@ class StockMarketSimulation(BaseEnvironment):
         """
 
         # Update market price
-        self.market.nextstep
+        self.market.nextstep()
         
         volume = 0
         
