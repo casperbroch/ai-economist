@@ -19,7 +19,7 @@ class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StockPriceHistory", "Demand", "Supply", "Volumes"]
-    self.market = StockMarket("MSFT")
+    market = StockMarket("MSFT")
 
 
     def __init__(
