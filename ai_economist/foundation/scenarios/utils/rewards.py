@@ -142,9 +142,9 @@ def planner_metric_stability(prices):
     
 def planner_metric_liquidity(volume_today, volumes):
     volume_average = np.average(volumes)
-    if volume_today >= volume_average
+    if volume_today >= volume_average:
         return 1.0
-    else
+    else:
         return 0.0
     
 def planner_reward_total(prices, volumes, volume_today):
