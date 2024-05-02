@@ -15,7 +15,7 @@ class ExecCircuitBreaker(BaseComponent):
         super().__init__(*base_component_args, **base_component_kwargs)
 
         # this defines the maximum importance of the green score (20 is equal to 100%, 1 to 5%)
-        self.no_actions = 2
+        self.no_actions = 1
 
     def get_additional_state_fields(self, agent_cls_name):
         return {}
@@ -25,7 +25,6 @@ class ExecCircuitBreaker(BaseComponent):
 
     def get_n_actions(self, agent_cls_name):
         if agent_cls_name == "BasicPlanner":
-            print("okay")
             return self.no_actions
         return None
 
