@@ -22,6 +22,7 @@ class StockMarketSimulation(BaseEnvironment):
     market = StockMarket("MSFT")
     
     STOCK_PRICE_HISTORY_LENGTH = 100
+    step_indicator = 0
 
 
 
@@ -53,6 +54,7 @@ class StockMarketSimulation(BaseEnvironment):
         Here, empty inventories, give mobile agents any starting coin, and place them
         in random accesible locations to start.
         """
+        self.step_indicator = 0
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
 
@@ -92,10 +94,14 @@ class StockMarketSimulation(BaseEnvironment):
         # Update market price within agent state
         for agent in self.world.agents:
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
-            agent.state["endogenous"]["StockPriceHistory"] = self.replace_first_zero(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
+            #agent.state["endogenous"]["StockPriceHistory"] agent.state["endogenous"]["StockPriceHistory"] = self.replace_first_zero(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
+            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
 
             volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
-            agent.state["endogenous"]["Volumes"] = self.replace_first_zero(agent.state["endogenous"]["Volumes"], volume)
+            #agent.state["endogenous"]["Volumes"] = self.replace_first_zero(agent.state["endogenous"]["Volumes"], volume)
+            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+
+        self.step_indicator += 1
 
         
 
