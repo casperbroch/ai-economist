@@ -20,6 +20,9 @@ class StockMarketSimulation(BaseEnvironment):
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StockPriceHistory", "Demand", "Supply", "Volumes"]
     market = StockMarket("MSFT")
+    
+    STOCK_PRICE_HISTORY_LENGTH = 100
+
 
 
     def __init__(
@@ -65,8 +68,9 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["TotalBalance"] = starting_funds
             
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
-            agent.state["endogenous"]["StockPriceHistory"] = np.array([self.market.getprice()])
-            agent.state["endogenous"]["Volumes"] = np.array([0])
+            
+            agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
+            agent.state["endogenous"]["Volumes"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
 
             
 
