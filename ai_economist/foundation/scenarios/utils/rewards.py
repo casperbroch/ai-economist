@@ -137,8 +137,11 @@ def agent_reward_total(balance, max_balance):
     return balance/max_balance
     
 def planner_metric_stability(prices):
-    return np.std([prices[i] - prices[i-1] for i in range(1, len(prices))])
-
+    if len(prices) < 2:
+        return 0.0  # Not enough data for stability metric, return 0
+        
+    price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
+    return np.std(price_diffs)
     
 def planner_metric_liquidity(volume_today, volumes):
     volume_average = np.average(volumes)
