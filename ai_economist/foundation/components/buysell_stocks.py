@@ -19,7 +19,7 @@ class BuyOrSellStocks(BaseComponent):
         self.transaction_cost = 0.0075
 
         # this defines the maximum # of rec packages (each 5% of their energy consumption) an agent can purchase
-        self.no_actions = 21
+        self.no_actions = 20
 
     def get_additional_state_fields(self, agent_cls_name):
         return {}
@@ -60,8 +60,11 @@ class BuyOrSellStocks(BaseComponent):
                 able_to_buy = agent.state["endogenous"]["AbleToBuy"]
                 able_to_sell = agent.state["endogenous"]["AbleToSell"]
 
+                if action == 0: # Agent wants to keep stocks
+                    agent.state["endogenous"]["Demand"] = 0.0
+                    agent.state["endogenous"]["Supply"] = 0.0
                       
-                if action <= 10 and able_to_buy == 0: # Agent wants to buy stocks
+                elif action <= 10 and able_to_buy == 0: # Agent wants to buy stocks
                     # Compute what maximum amount of stocks able to buy is
                     max_stocks_buy = (available_funds - (available_funds * transaction_cost)) // stock_price
                     
@@ -78,7 +81,7 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["Supply"] = 0.0
 
                     
-                if 10 < action <= 20 and able_to_sell == 0: # Agent wants to sell stocks
+                elif 10 < action <= 20 and able_to_sell == 0: # Agent wants to sell stocks
                     # Compute how much stocks agent wants to sell (each integer step in action is 10%)
                     sell_percentage = (action-10) * 0.10
                     stocks_to_sell = math.floor(number_of_stocks * sell_percentage)
@@ -92,10 +95,6 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = stocks_to_sell
                     
-                # Commenting this out is same as having the if-statement be useless
-                if action == 21: # Agent wants to keep stocks
-                    agent.state["endogenous"]["Demand"] = 0.0
-                    agent.state["endogenous"]["Supply"] = 0.0
 
             else: # We only declared 21 actions for this agent type, so action > 21 is an error.
                 raise ValueError
