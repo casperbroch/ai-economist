@@ -259,7 +259,7 @@ class StockMarketSimulation(BaseEnvironment):
             )
         return curr_optimization_metric
     
-    def replace_first_zero(arr, x):
+    def replace_first_zero(self, arr, x):
         # Find the index of the first zero in the array
         idx = np.where(arr == 0)[0]
         
