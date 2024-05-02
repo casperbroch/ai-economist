@@ -151,4 +151,4 @@ def planner_metric_liquidity(volume_today, volumes):
         return 0.0
     
 def planner_reward_total(prices, volumes, volume_today):
-    return (0,5-(0,5*planner_metric_stability(prices)))+0.5*planner_metric_liquidity(volume_today, volumes)
+    return (0.5-(0.5*planner_metric_stability(prices)))+0.5*planner_metric_liquidity(volume_today, volumes)
