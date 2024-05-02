@@ -25,6 +25,7 @@ class ExecCircuitBreaker(BaseComponent):
 
     def get_n_actions(self, agent_cls_name):
         if agent_cls_name == "BasicPlanner":
+            print("okay")
             return self.no_actions
         return None
 
