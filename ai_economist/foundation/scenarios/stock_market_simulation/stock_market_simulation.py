@@ -92,10 +92,10 @@ class StockMarketSimulation(BaseEnvironment):
         # Update market price within agent state
         for agent in self.world.agents:
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
-            agent.state["endogenous"]["StockPriceHistory"] = np.append(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
+            agent.state["endogenous"]["StockPriceHistory"] = self.replace_first_zero(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
 
             volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
-            agent.state["endogenous"]["Volumes"] = np.append(agent.state["endogenous"]["Volumes"], volume)
+            agent.state["endogenous"]["Volumes"] = self.replace_first_zero(agent.state["endogenous"]["Volumes"], volume)
 
         
 
@@ -258,3 +258,16 @@ class StockMarketSimulation(BaseEnvironment):
                 today_volume
             )
         return curr_optimization_metric
+    
+    def replace_first_zero(arr, x):
+        # Find the index of the first zero in the array
+        idx = np.where(arr == 0)[0]
+        
+        # If there are no zeros left, return the array as it is
+        if len(idx) == 0:
+            return arr
+        
+        # Replace the first zero with the number x
+        arr[idx[0]] = x
+        
+        return arr
