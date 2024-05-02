@@ -43,6 +43,7 @@ class ExecCircuitBreaker(BaseComponent):
 
     def component_step(self):
         planner_action = self.world.planner.get_component_action(self.name)
+        print(planner_action)
         
         if 0 <= planner_action <= 1: # Make sure the planner action is legal
         
