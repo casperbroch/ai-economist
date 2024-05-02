@@ -38,7 +38,7 @@ class ExecCircuitBreaker(BaseComponent):
 
     def generate_masks(self, completions=0):
         masks = {}
-        masks[self.world.planner.idx] = np.ones(int(self.no_actions))
+        masks[self.world.planner.idx] = [1 for _ in range(self.no_actions)]
         return masks
 
     def component_step(self):
