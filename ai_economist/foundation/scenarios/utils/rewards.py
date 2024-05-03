@@ -146,12 +146,8 @@ def planner_metric_stability(prices):
         price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
     else:
         price_diffs = [prices[i] - prices[i-1] for i in range(1, 10)]
-
-    std = np.std(price_diffs)
     
-    print("test std", std)
-
-    return std
+    return np.std(price_diffs)
     
 def planner_metric_liquidity(volume_today, volumes):
     volume_average = np.average(volumes)
@@ -161,5 +157,8 @@ def planner_metric_liquidity(volume_today, volumes):
         return 0.0
     
 def planner_reward_total(prices, volumes, volume_today):
-    reward = (0.5-(0.5*planner_metric_stability(prices)+10))+0.5*planner_metric_liquidity(volume_today, volumes)
-    return reward
+    
+    std = 1 - ((planner_metric_stability(prices) - 30) / (220 - 30))
+
+    reward = 0.5*std + 0.5*planner_metric_liquidity(volume_today, volumes)
+    return 2*reward -1
