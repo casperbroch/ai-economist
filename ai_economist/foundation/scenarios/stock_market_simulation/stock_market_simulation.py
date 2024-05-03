@@ -22,7 +22,7 @@ class StockMarketSimulation(BaseEnvironment):
     market = StockMarket("MSFT")
     stock_quantity = 200
     
-    STOCK_PRICE_HISTORY_LENGTH = 365
+    STOCK_PRICE_HISTORY_LENGTH = 100
     step_indicator = 0
 
 

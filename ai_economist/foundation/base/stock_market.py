@@ -56,10 +56,10 @@ class StockMarket:
         sim_return = np.random.normal(mu, sigma)
         return sim_return
         
-market = StockMarket("AAPL")
+market = StockMarket("MSFT")
 market.simulate(1)
 
-for i in range(1,10):
+for i in range(1,100):
     print(market.price)
     market.nextstep(10,20,1)
 
