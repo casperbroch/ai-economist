@@ -20,7 +20,7 @@ class StockMarketSimulation(BaseEnvironment):
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes"]
     market = StockMarket("MSFT")
-    stock_quantity = 100
+    stock_quantity = 2000
     
     STOCK_PRICE_HISTORY_LENGTH = 100
     step_indicator = 0
