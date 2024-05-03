@@ -79,6 +79,9 @@ class StockMarketSimulation(BaseEnvironment):
             
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
             agent.state["endogenous"]["Volumes"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
+            
+            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
+            agent.state["endogenous"]["Volumes"][self.step_indicator] = 0
 
             
 
