@@ -18,7 +18,10 @@ class StockMarket:
         
     def nextstep(self, supply, demand, stocksQuantity):
         random_return = self.get_random_return()
-        p = (demand - supply) / demand+supply
+        if demand+supply > 0:
+            p = (demand - supply) / demand+supply
+        else:
+            p = 0
         
         self.price = self.price * (1 + (0.5*random_return + 0.5*p))
         
