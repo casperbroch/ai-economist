@@ -113,6 +113,8 @@ class StockMarketSimulation(BaseEnvironment):
 
             volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
             #agent.state["endogenous"]["Volumes"] = self.replace_first_zero(agent.state["endogenous"]["Volumes"], volume)
+
+        for agent in self.world.agents:
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
 
         self.step_indicator += 1
