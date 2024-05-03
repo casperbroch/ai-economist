@@ -145,7 +145,7 @@ def planner_metric_stability(prices):
     elif len(prices) < 10:
         price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
     else:
-        price_diffs = [prices[i] - prices[i-1] for i in 10]
+        price_diffs = [prices[i] - prices[i-1] for i in range(1, 10)]
 
     std = np.std(price_diffs)
     
