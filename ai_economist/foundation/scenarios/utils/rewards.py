@@ -134,7 +134,10 @@ def inv_income_weighted_utility(coin_endowments, utilities):
 
 
 def agent_reward_total(balance, max_balance):
-    return balance/max_balance
+    reward = balance/max_balance
+    print("agent reward: ", reward)
+    return reward
+
     
 def planner_metric_stability(prices):
     if len(prices) < 2:
@@ -151,4 +154,6 @@ def planner_metric_liquidity(volume_today, volumes):
         return 0.0
     
 def planner_reward_total(prices, volumes, volume_today):
-    return (0.5-(0.5*planner_metric_stability(prices)))+0.5*planner_metric_liquidity(volume_today, volumes)
+    reward = (0.5-(0.5*planner_metric_stability(prices)))+0.5*planner_metric_liquidity(volume_today, volumes)
+    print("planner reward: ", reward)
+    return reward
