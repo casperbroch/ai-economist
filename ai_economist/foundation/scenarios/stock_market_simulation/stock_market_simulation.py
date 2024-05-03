@@ -91,34 +91,26 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
+        self.step_indicator += 1
         
+        # Update market price
+        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+                
+
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
         total_demand = 0
         for agent in self.world.agents:
             total_demand += agent.state["endogenous"]["Demand"]
             total_supply += agent.state["endogenous"]["Supply"]
+            
+        volume = total_supply + total_demand
 
-
-        # Update market price
-        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
-        
-        volume = 0
-        
         # Update market price within agent state
         for agent in self.world.agents:
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
-            #agent.state["endogenous"]["StockPriceHistory"] agent.state["endogenous"]["StockPriceHistory"] = self.replace_first_zero(agent.state["endogenous"]["StockPriceHistory"], self.market.getprice())
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
-
-            volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
-            #agent.state["endogenous"]["Volumes"] = self.replace_first_zero(agent.state["endogenous"]["Volumes"], volume)
-
-        for agent in self.world.agents:
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
-
-        self.step_indicator += 1
-
         
 
 
