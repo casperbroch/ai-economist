@@ -22,8 +22,9 @@ class StockMarket:
             p = (demand - supply) / (demand + supply)
         else:
             p = 0
+            
         
-        self.price = self.price * (1 + (0.5*random_return + 0.5*p))
+        self.price = self.price * (1 + (0.5*random_return + 0.05*p))
         
         
     def nextsteprandom(self):
@@ -56,4 +57,10 @@ class StockMarket:
         return sim_return
         
 market = StockMarket("AAPL")
+market.simulate(1)
 
+for i in range(1,10):
+    print(market.price)
+    market.nextstep(10,20,1)
+
+print(market.price)
