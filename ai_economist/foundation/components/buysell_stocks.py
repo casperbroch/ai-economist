@@ -72,6 +72,9 @@ class BuyOrSellStocks(BaseComponent):
                     buy_percentage = action * 0.10
                     stocks_to_buy = math.floor(max_stocks_buy * buy_percentage)
                     
+                    if stocks_to_buy > agent.state["endogenous"]["StocksLeft"]:
+                        stocks_to_buy = agent.state["endogenous"]["StocksLeft"]
+                    
                     # Compute how much it will cost and update variables
                     cost_to_buy = (stocks_to_buy * stock_price) + (stocks_to_buy * stock_price * transaction_cost)
                     agent.state["endogenous"]["AvailableFunds"] -= cost_to_buy
@@ -79,6 +82,9 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["TotalBalance"] = agent.state["endogenous"]["AvailableFunds"] + (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] - (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] * transaction_cost))
                     agent.state["endogenous"]["Demand"] = stocks_to_buy
                     agent.state["endogenous"]["Supply"] = 0.0
+                    
+                    for agent in self.world.agents:
+                        agent.state["endogenous"]["StocksLeft"] -= stocks_to_buy
 
                     
                 elif 10 < action <= 20 and able_to_sell == 0: # Agent wants to sell stocks
@@ -95,6 +101,8 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = stocks_to_sell
                     
+                    for agent in self.world.agents:
+                        agent.state["endogenous"]["StocksLeft"] += stocks_to_sell                    
 
             else: # We only declared 21 actions for this agent type, so action > 21 is an error.
                 raise ValueError

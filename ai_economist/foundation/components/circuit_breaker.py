@@ -18,9 +18,12 @@ class ExecCircuitBreaker(BaseComponent):
         self.no_actions = 1
 
     def get_additional_state_fields(self, agent_cls_name):
+        if agent_cls_name == "BasicPlanner":
+            return {"Volume": 0}
         return {}
 
     def additional_reset_steps(self):
+        
         self.is_first_step = True
 
     def get_n_actions(self, agent_cls_name):

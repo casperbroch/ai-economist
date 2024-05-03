@@ -15,8 +15,15 @@ class StockMarket:
     def simulate(self, no_days):
         self.sim_price = self.simulate_stock_price(no_days)
         self.price = self.sim_price[-1]
-    
-    def nextstep(self):
+        
+    def nextstep(self, supply, demand, stocksQuantity):
+        random_return = self.get_random_return()
+        p = (demand - supply) / stocksQuantity
+        
+        self.price = self.price * (1 + (0.5*random_return + 0.5*p))
+        
+        
+    def nextsteprandom(self):
         next_step = self.simulate_one_step(self.price)
         self.sim_price = np.concatenate((self.sim_price, [next_step]))    
         self.price = next_step
@@ -38,6 +45,12 @@ class StockMarket:
         sim_return = np.random.normal(mu, sigma)
         sim_price = current_price * (sim_return + 1)
         return sim_price
+    
+    def get_random_return(self):
+        returns = np.log(1 + self.data['Adj Close'].pct_change())
+        mu, sigma = returns.mean(), returns.std()
+        sim_return = np.random.normal(mu, sigma)
+        return sim_return
         
 market = StockMarket("AAPL")
 

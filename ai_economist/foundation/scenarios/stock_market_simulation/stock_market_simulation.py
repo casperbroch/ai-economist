@@ -18,8 +18,9 @@ from ai_economist.foundation.base.stock_market import StockMarket
 class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
-    required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StockPriceHistory", "Demand", "Supply", "Volumes"]
+    required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes"]
     market = StockMarket("MSFT")
+    stock_quantity = 100
     
     STOCK_PRICE_HISTORY_LENGTH = 100
     step_indicator = 0
@@ -64,6 +65,11 @@ class StockMarketSimulation(BaseEnvironment):
 
             # This will set all variables to 0
             agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
+            
+            
+            # There are 100 stocks left to begin with
+            agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
+
 
             starting_funds = np.random.normal(20000, 5000)
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
@@ -85,9 +91,17 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
+        
+        # Get total total supply/demand in order to determine stock price
+        total_supply = 0
+        total_demand = 0
+        for agent in self.world.agents:
+            total_demand += agent.state["endogenous"]["Demand"]
+            total_supply += agent.state["endogenous"]["Supply"]
+
 
         # Update market price
-        self.market.nextstep()
+        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
         volume = 0
         
@@ -127,7 +141,7 @@ class StockMarketSimulation(BaseEnvironment):
         obs_dict = dict()
         for agent in self.world.agents:
             obs_dict[str(agent.idx)] = {
-                "Endogenous-" + k: v for k, v in agent.endogenous.items() if k != "Volumes"
+                "Endogenous-" + k: v for k, v in agent.endogenous.items() if (k != "Volumes" or k != "StocksLeft" )
             }
         
             

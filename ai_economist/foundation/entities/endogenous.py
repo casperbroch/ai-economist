@@ -28,12 +28,6 @@ class Endogenous:
 
 endogenous_registry = Registry(Endogenous)
 
-
-@endogenous_registry.add
-class Labor(Endogenous):
-    """Labor accumulated through working. Included in all environments by default."""
-
-    name = "Labor"
     
 @endogenous_registry.add
 class TotalBalance(Endogenous):
@@ -64,6 +58,12 @@ class StockPriceHistory(Endogenous):
     """The history of the price of a stock"""
 
     name = "StockPriceHistory"
+    
+@endogenous_registry.add
+class StocksLeft(Endogenous):
+    """The number of stocks left in the market to buy"""
+
+    name = "StocksLeft"
     
 @endogenous_registry.add
 class Demand(Endogenous):
