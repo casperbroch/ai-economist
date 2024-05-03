@@ -135,15 +135,23 @@ def inv_income_weighted_utility(coin_endowments, utilities):
 
 def agent_reward_total(balance, max_balance):
     reward = balance/max_balance
-    return reward
+    # Transform total reward to be [-1,1]
+    return 2*reward - 1
 
     
 def planner_metric_stability(prices):
     if len(prices) < 2:
         return 0.0  # Not enough data for stability metric, return 0
-        
-    price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
-    return np.std(price_diffs)
+    elif len(prices) < 10:
+        price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
+    else:
+        price_diffs = [prices[i] - prices[i-1] for i in 10]
+
+    std = np.std(price_diffs)
+    
+    print("test std", std)
+
+    return std
     
 def planner_metric_liquidity(volume_today, volumes):
     volume_average = np.average(volumes)
