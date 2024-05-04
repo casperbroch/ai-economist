@@ -161,11 +161,9 @@ def planner_metric_liquidity(volume_today, volumes, index):
     
 def planner_reward_total(prices, volumes, volume_today, index):
     
-    std = 1 - ((planner_metric_stability(prices, index) - 30) / (220 - 30))
+    std = 1 - ((planner_metric_stability(prices, index) - 20) / (220 - 20))
     liq = planner_metric_liquidity(volume_today, volumes, index)
-    
-    print("std ",planner_metric_stability(prices, index))
-    print("liquidity",liq)
 
     reward = 0.5*std + 0.5*liq
+    print(2*reward -1)
     return 2*reward -1
