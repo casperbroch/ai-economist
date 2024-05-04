@@ -139,13 +139,13 @@ def agent_reward_total(balance, max_balance):
     return 2*reward - 1
 
     
-def planner_metric_stability(prices):
-    if len(prices) < 2:
-        return 0.0  # Not enough data for stability metric, return 0
-    elif len(prices) < 10:
-        price_diffs = [prices[i] - prices[i-1] for i in range(1, len(prices))]
+def planner_metric_stability(prices, index):
+    if index>1:
+        price_diffs = [prices[i] - prices[i-1] for i in range(index)]
+    elif index>10:
+        price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
     else:
-        price_diffs = [prices[i] - prices[i-1] for i in range(1, 10)]
+        return 0.0
     
     return np.std(price_diffs)
     
