@@ -149,20 +149,20 @@ def planner_metric_stability(prices):
     
     return np.std(price_diffs)
     
-def planner_metric_liquidity(volume_today, volumes):
-    volume_average = np.average(volumes)
+def planner_metric_liquidity(volume_today, volumes, index):
+    volume_average = np.average(volumes[:index])  # Slice the volumes array up to index
     if volume_today >= volume_average:
         return 1.0
     else:
         return 0.0
     
-def planner_reward_total(prices, volumes, volume_today):
+def planner_reward_total(prices, volumes, volume_today, index):
     
     std = 1 - ((planner_metric_stability(prices) - 30) / (220 - 30))
-    liq = planner_metric_liquidity(volume_today, volumes)
+    liq = planner_metric_liquidity(volume_today, volumes, index)
     
-    print("std ",std)
+    print("std ",planner_metric_stability(prices))
     print("liquidity",liq)
 
-    reward = 0.1*std + 0.9*liq
+    reward = 0.5*std + 0.5*liq
     return 2*reward -1

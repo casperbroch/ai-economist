@@ -272,7 +272,8 @@ class StockMarketSimulation(BaseEnvironment):
         ] = rewards.planner_reward_total(
                 prices,
                 volumes,
-                today_volume
+                today_volume,
+                self.step_indicator
             )
         return curr_optimization_metric
     
