@@ -154,14 +154,16 @@ def planner_metric_liquidity(volume_today, volumes, index):
         volume_average = np.average(volumes[:index])  # Slice the volumes array up to index
         if volume_today >= volume_average:
             return 1.0
+        elif volume_average > 0.0:
+            return volume_today/volume_average
         else:
-            return 0.0
+            return 1.0
     else:
         return 0.0
     
 def planner_reward_total(prices, volumes, volume_today, index):
     
-    std = 1 - ((planner_metric_stability(prices, index) - 20) / (220 - 20))
+    std = 1 - ((planner_metric_stability(prices, index)) / (220))
     liq = planner_metric_liquidity(volume_today, volumes, index)
 
     reward = 0.5*std + 0.5*liq
