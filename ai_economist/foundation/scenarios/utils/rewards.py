@@ -142,7 +142,7 @@ def agent_reward_total(balance, max_balance):
 def planner_metric_stability(prices, index):
     if index>1:
         price_diffs = [prices[i] - prices[i-1] for i in range(index)]
-    elif index>10:
+    elif index>=10:
         price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
     else:
         return 0.0
@@ -150,9 +150,12 @@ def planner_metric_stability(prices, index):
     return np.std(price_diffs)
     
 def planner_metric_liquidity(volume_today, volumes, index):
-    volume_average = np.average(volumes[:index])  # Slice the volumes array up to index
-    if volume_today >= volume_average:
-        return 1.0
+    if index > 0:
+        volume_average = np.average(volumes[:index])  # Slice the volumes array up to index
+        if volume_today >= volume_average:
+            return 1.0
+        else:
+            return 0.0
     else:
         return 0.0
     
