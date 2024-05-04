@@ -23,7 +23,6 @@ class StockMarket:
         else:
             p = 0
             
-        
         self.price = self.price * (1 + (0.5*random_return + 0.05*p))
         
         
@@ -55,12 +54,4 @@ class StockMarket:
         mu, sigma = returns.mean(), returns.std()
         sim_return = np.random.normal(mu, sigma)
         return sim_return
-        
-market = StockMarket("MSFT")
-market.simulate(1)
-
-for i in range(1,100):
-    print(market.price)
-    market.nextstep(10,20,1)
-
-print(market.price)
+    
