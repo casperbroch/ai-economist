@@ -168,4 +168,5 @@ def planner_reward_total(prices, volumes, volume_today, index):
 
     reward = 0.5*std + 0.5*liq
     print(2*reward -1)
+    print("based on liq: ", liq, " --- std: ", std)
     return 2*reward -1
