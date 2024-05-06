@@ -66,6 +66,9 @@ class StockMarketSimulation(BaseEnvironment):
             # This will set all variables to 0
             agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
             
+            agent.state["endogenous"]["AbleToBuy"] = True
+            agent.state["endogenous"]["AbleToSell"] = True
+            
             
             # There are 100 stocks left to begin with
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
