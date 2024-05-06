@@ -181,6 +181,6 @@ def planner_reward_total(prices, volumes, volume_today, index):
     liq = planner_metric_liquidity(volume_today, volumes, index)
 
     reward = 0.01*std + 0.99*liq
-    #print(2*reward -1)
-    #print("based on liq: ", liq, " --- std: ", std)
+    print(2*reward -1)
+    print("based on liq: ", liq, " --- std: ", std)
     return 2*reward -1
