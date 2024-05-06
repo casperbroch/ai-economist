@@ -104,7 +104,7 @@ class BuyOrSellStocks(BaseComponent):
                     for agent in self.world.agents:
                         agent.state["endogenous"]["StocksLeft"] += stocks_to_sell     
                 
-                elif able_to_buy == 0.0 and able_to_sell == 0.0:
+                elif able_to_buy == 1.0 and able_to_sell == 1.0:
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = 0.0           
 
