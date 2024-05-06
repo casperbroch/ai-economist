@@ -140,14 +140,19 @@ def agent_reward_total(balance, max_balance):
 
     
 def planner_metric_stability(prices, index):
-    if index>1:
+    if index > 1:
         price_diffs = [prices[i] - prices[i-1] for i in range(index)]
-    elif index>=10:
+    elif index >= 10:
         price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
     else:
         return 0.0
     
-    return np.std(price_diffs)
+    negative_diffs = [diff for diff in price_diffs if diff < 0]  # Filter only negative differences
+    
+    if len(negative_diffs) == 0:
+        return 0.0  # If there are no negative differences, return 0
+    
+    return np.std(negative_diffs)
     
 def planner_metric_liquidity(volume_today, volumes, index):
     
