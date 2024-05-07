@@ -5,6 +5,7 @@
 # or https://opensource.org/licenses/BSD-3-Clause
 
 import numpy as np
+import csv
 
 from ai_economist.foundation.scenarios.utils import social_metrics
 
@@ -150,24 +151,36 @@ def planner_metric_stability(prices, index):
     negative_diffs = [diff for diff in price_diffs if diff < 0]  # Filter only negative differences
     
     if len(negative_diffs) == 0:
-        return 0.0  # If there are no negative differences, return 0
+        return 0.0
     
-    return np.std(negative_diffs)
+    std = np.std(negative_diffs)
+    
+    file_path = 'C:\\Users\\caspe\\Desktop\\stdvs.csv'
+    # Writing to CSV
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(std)
+    
+    return std
     
 def planner_metric_liquidity(volume_today, volumes, index):
     
-    return volume_today / 50
+    file_path = 'C:\\Users\\caspe\\Desktop\\volumes.csv'
+    # Writing to CSV
+    with open(file_path, mode='a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(volume_today)
     
-    # if index > 0:
-    #     volume_average = np.average(volumes[:index])
-    #     return volume_comparer(volume_average, volume_today)
+    if index > 0:
+        volume_average = np.average(volumes[:index])
+        return volume_comparer(volume_average, volume_today)
   
-    # elif index >= 10:
-    #     volume_average = np.average(volumes[index - 10:index])  
-    #     return volume_comparer(volume_average, volume_today)
+    elif index >= 10:
+        volume_average = np.average(volumes[index - 10:index])  
+        return volume_comparer(volume_average, volume_today)
 
-    # else:
-    #     return 0.0
+    else:
+        return 0.0
     
 def volume_comparer(volume_average, volume_today):
     if volume_today >= volume_average:
