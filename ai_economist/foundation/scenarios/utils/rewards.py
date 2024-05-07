@@ -143,8 +143,8 @@ def agent_reward_total(balance, max_balance):
 def planner_metric_stability(prices, index):
     if index > 1:
         price_diffs = [prices[i] - prices[i-1] for i in range(index)]
-    elif index >= 5:
-        price_diffs = [prices[i] - prices[i-1] for i in range(index-5, index)]
+    elif index >= 10:
+        price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
     else:
         return 0.0
     
