@@ -273,7 +273,7 @@ class StockMarketSimulation(BaseEnvironment):
                 prices,
                 self.step_indicator,
                 today_volume,
-                0.5,
+                0.75,
             )
         return curr_optimization_metric
     
