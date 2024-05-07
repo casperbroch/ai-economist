@@ -20,9 +20,7 @@ class StockMarketSimulation(BaseEnvironment):
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
     required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
     market = StockMarket("MSFT")
-    stock_quantity = 200
     
-    STOCK_PRICE_HISTORY_LENGTH = 101
     step_indicator = 0
 
 
@@ -30,11 +28,19 @@ class StockMarketSimulation(BaseEnvironment):
     def __init__(
         self,
         *base_env_args,
-        **base_env_kwargs
+        volume_importance=0.5,
+        stock_price_history_length=101,
+        stock_quantity=200,
+        **base_env_kwargs,
     ):
         super().__init__(*base_env_args, **base_env_kwargs)
         self.num_agents = len(self.world.agents)
         self.curr_optimization_metrics = {str(a.idx): 0.0 for a in self.all_agents}
+        
+        self.volume_importance = float(volume_importance)
+        self.stock_price_history_length=int(stock_price_history_length)
+        self.stock_quantity=int(stock_quantity)
+
 
 
 
@@ -77,8 +83,8 @@ class StockMarketSimulation(BaseEnvironment):
             
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
             
-            agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
-            agent.state["endogenous"]["Volumes"] = np.zeros(self.STOCK_PRICE_HISTORY_LENGTH)
+            agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
+            agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
             
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             agent.state["endogenous"]["Volumes"][self.step_indicator] = 0
