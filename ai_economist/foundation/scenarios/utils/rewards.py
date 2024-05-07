@@ -159,7 +159,7 @@ def planner_metric_stability(prices, index):
     # Writing to CSV
     with open(file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(std)
+        writer.writerow([std])
     
     return std
     
@@ -169,7 +169,7 @@ def planner_metric_liquidity(volume_today, volumes, index):
     # Writing to CSV
     with open(file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(volume_today)
+        writer.writerow([volume_today])
     
     if index > 0:
         volume_average = np.average(volumes[:index])
