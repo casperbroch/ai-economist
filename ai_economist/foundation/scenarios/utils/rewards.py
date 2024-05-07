@@ -143,8 +143,8 @@ def agent_reward_total(balance, max_balance):
 def planner_metric_stability(prices, index):
     if index > 1:
         price_diffs = [prices[i] - prices[i-1] for i in range(index)]
-    elif index >= 10:
-        price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
+    elif index >= 5:
+        price_diffs = [prices[i] - prices[i-1] for i in range(index-5, index)]
     else:
         return 0.0
     
@@ -155,11 +155,11 @@ def planner_metric_stability(prices, index):
     
     std = np.std(negative_diffs)
     
-    file_path = 'C:\\Users\\caspe\\Desktop\\stdvs.csv'
+    #file_path = 'C:\\Users\\caspe\\Desktop\\stdvs.csv'
     # Writing to CSV
-    with open(file_path, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([std])
+    #with open(file_path, mode='a', newline='') as file:
+    #    writer = csv.writer(file)
+    #    writer.writerow([std])
     
     return std
     
@@ -199,3 +199,39 @@ def planner_reward_total(prices, volumes, volume_today, index):
     #print(2*reward -1)
     #print("based on liq: ", liq, " --- std: ", std)
     return 2*reward -1
+
+
+def reward_function_planner(prices, index, volume, volume_weight=0.5):
+    """
+    Reward function to evaluate the current state of the market.
+    
+    Parameters:
+        volume (float): Current volume of the market.
+        std_dev (float): Current standard deviation of the market.
+        volume_weight (float): Weight of volume in the reward calculation.
+        
+    Returns:
+        float: Reward value.
+    """
+    
+    # Gathered from base data
+    AVERAGE_VOLUME = 27.61291121680539
+    AVERAGE_STDV = 7.880280857892539
+    
+    # Get target values which the planner wants to achieve
+    target_volume = 1.1 * AVERAGE_VOLUME
+    target_std_dev = 0.9 * AVERAGE_STDV
+    
+    # Get standard deviation from past 5 timesteps
+    std_dev = planner_metric_stability(prices, index)
+    
+    # Calculate volume deviation from target
+    volume_deviation = abs(volume - target_volume) / target_volume
+    
+    # Calculate std_dev deviation from target
+    std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
+    
+    # Reward is a combination of volume and std_dev deviation
+    reward = (1 - volume_weight) * (1 - std_dev_deviation) + volume_weight * (1 - volume_deviation)
+    
+    return reward

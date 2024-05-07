@@ -269,11 +269,11 @@ class StockMarketSimulation(BaseEnvironment):
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
-        ] = rewards.planner_reward_total(
+        ] = rewards.reward_function_planner(
                 prices,
-                volumes,
+                self.step_indicator,
                 today_volume,
-                self.step_indicator
+                0.5,
             )
         return curr_optimization_metric
     
