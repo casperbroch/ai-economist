@@ -271,9 +271,7 @@ class StockMarketSimulation(BaseEnvironment):
                 agent.state["endogenous"]["TotalBalance"],
                 max_balance
             )
-            
-        print(self.volume_importance)
-        
+                    
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
