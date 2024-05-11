@@ -137,7 +137,7 @@ def inv_income_weighted_utility(coin_endowments, utilities):
 def agent_reward_total(balance, max_balance):
     reward = balance/max_balance
     # Transform total reward to be [-1,1]
-    return 2*reward - 1
+    return reward 
 
     
 def planner_metric_stability(prices, index):
