@@ -163,57 +163,19 @@ def planner_metric_stability(prices, index):
     
     return std
     
-def planner_metric_liquidity(volume_today, volumes, index):
-    
-    file_path = 'C:\\Users\\caspe\\Desktop\\volumes.csv'
-    # Writing to CSV
-    with open(file_path, mode='a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([volume_today])
-    
-    if index > 0:
-        volume_average = np.average(volumes[:index])
-        return volume_comparer(volume_average, volume_today)
-  
-    elif index >= 10:
-        volume_average = np.average(volumes[index - 10:index])  
-        return volume_comparer(volume_average, volume_today)
+def reward_function_liquidity(index, volume, volumes):
 
+    max_vol = max(volumes[:index+1])
+            
+    if max_vol == 0:
+        vol_reward = 0.0
     else:
-        return 0.0
-    
-def volume_comparer(volume_average, volume_today):
-    if volume_today >= volume_average:
-        return 1.0
-    elif volume_average > 0.0:
-        return volume_today / volume_average
-    else:
-        return 1.0
-    
-def planner_reward_total(prices, volumes, volume_today, index):
-    
-    std = 1 - ((planner_metric_stability(prices, index)) / (220))
-    liq = planner_metric_liquidity(volume_today, volumes, index)
+        vol_reward = volume/max_vol
 
-    reward = 0.5*std + 0.5*liq
-    #print(2*reward -1)
-    #print("based on liq: ", liq, " --- std: ", std)
-    return 2*reward -1
+    return vol_reward
 
 
 def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
-    """
-    Reward function to evaluate the current state of the market.
-    
-    Parameters:
-        volume (float): Current volume of the market.
-        std_dev (float): Current standard deviation of the market.
-        volume_weight (float): Weight of volume in the reward calculation.
-        
-    Returns:
-        float: Reward value.
-    """
-    
    # Gathered from base data
     AVERAGE_VOLUME = 27.61291121680539
     AVERAGE_STDV = 7.880280857892539
