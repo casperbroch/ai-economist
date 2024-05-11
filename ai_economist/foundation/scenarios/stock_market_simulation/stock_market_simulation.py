@@ -149,6 +149,7 @@ class StockMarketSimulation(BaseEnvironment):
         
             
         prices_history = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
+        stocks_left =  self.world.agents[0].state["endogenous"]["StocksLeft"]
         volumes = self.world.agents[0].state["endogenous"]["Volumes"]
         total_demand = 0.0
         total_supply = 0.0
@@ -160,6 +161,9 @@ class StockMarketSimulation(BaseEnvironment):
 
         obs_dict[self.world.planner.idx] = {
             "volume": volume,
+            "total_demand": total_demand,
+            "total_supply": total_supply,
+            "stocks_left": stocks_left
         }
         
 
@@ -214,6 +218,16 @@ class StockMarketSimulation(BaseEnvironment):
         Here, summarize social metrics, endowments, utilities, and labor cost annealing.
         """
         metrics = dict()
+        
+        total_demand = 0.0
+        total_supply = 0.0
+        for agent in self.world.agents:
+            total_demand += agent.state["endogenous"]["Demand"]
+            total_supply += agent.state["endogenous"]["Supply"]
+
+        volume = total_demand + total_supply
+        
+        metrics["system/volume"] = volume
 
         # Log average endogenous, and utility for agents
         agent_endogenous = {}
