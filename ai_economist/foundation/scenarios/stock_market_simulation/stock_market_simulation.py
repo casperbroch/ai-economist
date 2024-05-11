@@ -162,7 +162,6 @@ class StockMarketSimulation(BaseEnvironment):
             "volume": volume,
         }
         
-        print("Observing volume:", volume)
 
         return obs_dict
 
