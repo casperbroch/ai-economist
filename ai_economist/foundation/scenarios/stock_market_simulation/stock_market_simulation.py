@@ -291,5 +291,13 @@ class StockMarketSimulation(BaseEnvironment):
                 volumes,
                 self.volume_importance
                 )
+        
+        for agent in agents:
+            if curr_optimization_metric[agent.idx] > 0 or curr_optimization_metric[agent.idx] < 0:
+                print("Lower or bigger than 0 for agent")
+                
+        if curr_optimization_metric[self.world.planner.idx] > 0 or curr_optimization_metric[self.world.planner.idx] < 0:
+                print("Lower or bigger than 0 for planner")
+                
         return curr_optimization_metric
     
