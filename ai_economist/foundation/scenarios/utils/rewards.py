@@ -188,12 +188,16 @@ def reward_function_planner(prices, index, volumes, volume_weight=0.5):
     std_dev = planner_metric_stability(prices, index)
     
     volume = volumes[index]
-    max_vol = max(volumes[:index])
+    max_vol = max(volumes)
             
     if max_vol == 0.0:
         vol_reward = 0.0
     else:
         vol_reward = volume/max_vol
+        
+    print("Volumes", volumes)
+    print("Max_vol", max_vol)
+    print("vol_reward", vol_reward)
 
     # Calculate std_dev deviation from target
     std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
@@ -201,7 +205,6 @@ def reward_function_planner(prices, index, volumes, volume_weight=0.5):
     # Reward is a combination of volume and std_dev deviation
     reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
     
-    print("vol weight == reward!!",volume_weight)
     print("reward!!!!",reward)
     print(" ")
     return reward
