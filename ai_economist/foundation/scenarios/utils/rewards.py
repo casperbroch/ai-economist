@@ -225,7 +225,7 @@ def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
     # Get standard deviation from past 5 timesteps
     std_dev = planner_metric_stability(prices, index)
     
-    max_vol = max(volumes)
+    max_vol = max(volumes[:index+1])
             
     if max_vol == 0:
         vol_reward = 0.0
