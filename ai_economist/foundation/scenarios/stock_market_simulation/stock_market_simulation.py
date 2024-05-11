@@ -161,6 +161,8 @@ class StockMarketSimulation(BaseEnvironment):
         obs_dict[self.world.planner.idx] = {
             "volume": volume,
         }
+        
+        print("Observing volume:", volume)
 
         return obs_dict
 
