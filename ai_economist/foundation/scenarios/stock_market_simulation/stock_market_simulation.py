@@ -293,10 +293,10 @@ class StockMarketSimulation(BaseEnvironment):
                 )
         
         for agent in agents:
-            if curr_optimization_metric[agent.idx] > 0 or curr_optimization_metric[agent.idx] < 0:
+            if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:
                 print("Lower or bigger than 0 for agent")
                 
-        if curr_optimization_metric[self.world.planner.idx] > 0 or curr_optimization_metric[self.world.planner.idx] < 0:
+        if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
                 print("Lower or bigger than 0 for planner")
                 
         return curr_optimization_metric
