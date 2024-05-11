@@ -175,7 +175,7 @@ def reward_function_liquidity(index, volume, volumes):
     return vol_reward
 
 
-def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
+def reward_function_planner(prices, index, volumes, volume_weight=0.5):
    # Gathered from base data
     AVERAGE_VOLUME = 27.61291121680539
     AVERAGE_STDV = 7.880280857892539
@@ -187,9 +187,10 @@ def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
     # Get standard deviation from past 5 timesteps
     std_dev = planner_metric_stability(prices, index)
     
-    max_vol = max(volumes[:index+1])
+    volume = volumes[index]
+    max_vol = max(volumes[:index])
             
-    if max_vol == 0:
+    if max_vol == 0.0:
         vol_reward = 0.0
     else:
         vol_reward = volume/max_vol
@@ -200,5 +201,7 @@ def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
     # Reward is a combination of volume and std_dev deviation
     reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
     
-    print(reward)
+    print("vol weight == reward!!",volume_weight)
+    print("reward!!!!",reward)
+    print(" ")
     return reward

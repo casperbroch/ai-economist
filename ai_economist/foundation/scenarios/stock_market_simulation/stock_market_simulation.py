@@ -249,11 +249,9 @@ class StockMarketSimulation(BaseEnvironment):
 
         # Find the largest balance among agents and compute the today's volume
         max_balance = 0.0
-        today_volume = 0.0
         for agent in agents:
             if agent.state["endogenous"]["TotalBalance"] > max_balance:
                 max_balance = agent.state["endogenous"]["TotalBalance"]
-                today_volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
         
         # Find prices and volumes arrays
         prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
@@ -275,7 +273,6 @@ class StockMarketSimulation(BaseEnvironment):
         ] = rewards.reward_function_planner(
                 prices,
                 self.step_indicator,
-                today_volume,
                 volumes,
                 self.volume_importance
                 )
