@@ -201,7 +201,7 @@ def planner_reward_total(prices, volumes, volume_today, index):
     return 2*reward -1
 
 
-def reward_function_planner(prices, index, volume, volume_weight=0.5):
+def reward_function_planner(prices, index, volume, volumes, volume_weight=0.5):
     """
     Reward function to evaluate the current state of the market.
     
@@ -214,7 +214,7 @@ def reward_function_planner(prices, index, volume, volume_weight=0.5):
         float: Reward value.
     """
     
-    # Gathered from base data
+   # Gathered from base data
     AVERAGE_VOLUME = 27.61291121680539
     AVERAGE_STDV = 7.880280857892539
     
@@ -225,13 +225,17 @@ def reward_function_planner(prices, index, volume, volume_weight=0.5):
     # Get standard deviation from past 5 timesteps
     std_dev = planner_metric_stability(prices, index)
     
-    # Calculate volume deviation from target
-    volume_deviation = ((volume - target_volume))
+    max_vol = max(volumes)
+            
+    if max_vol == 0:
+        vol_reward = 0.0
+    else:
+        vol_reward = volume/max_vol
 
     # Calculate std_dev deviation from target
     std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
     
     # Reward is a combination of volume and std_dev deviation
-    reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * volume_deviation)
+    reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
     
     return reward
