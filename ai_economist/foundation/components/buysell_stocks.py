@@ -114,9 +114,5 @@ class BuyOrSellStocks(BaseComponent):
             
     def generate_observations(self):
         obs_dict = {}
-        for agent in self.world.agents:
-            obs_dict[agent.idx] = {
-                "stock_price": agent.state["endogenous"]["StockPrice"]
-            }
 
         return obs_dict

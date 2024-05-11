@@ -187,7 +187,7 @@ class StockMarketSimulation(BaseEnvironment):
             self.world.agents
         )
         planner_agents_rew = {
-            k: v - self.curr_optimization_metrics[k]
+            k: v
             for k, v in curr_optimization_metrics.items()
         }
         self.curr_optimization_metrics = curr_optimization_metrics
