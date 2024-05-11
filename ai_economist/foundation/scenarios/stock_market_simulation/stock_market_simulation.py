@@ -152,16 +152,14 @@ class StockMarketSimulation(BaseEnvironment):
         volumes = self.world.agents[0].state["endogenous"]["Volumes"]
         total_demand = 0.0
         total_supply = 0.0
-        today_volume = 0.0
         for agent in self.world.agents:
             total_demand += agent.state["endogenous"]["Demand"]
             total_supply += agent.state["endogenous"]["Supply"]
-            today_volume += agent.state["endogenous"]["Demand"] + agent.state["endogenous"]["Supply"]
 
+        volume = total_demand + total_supply
 
-        volume_reward = rewards.reward_function_liquidity(self.step_indicator, today_volume, volumes)
         obs_dict[self.world.planner.idx] = {
-            "Volume_Reward": volume_reward
+            "volume": volume,
         }
 
         return obs_dict
