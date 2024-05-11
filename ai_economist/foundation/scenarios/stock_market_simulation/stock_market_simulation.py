@@ -271,7 +271,7 @@ class StockMarketSimulation(BaseEnvironment):
                 agent.state["endogenous"]["TotalBalance"],
                 max_balance
             )
-                    
+                
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
@@ -279,6 +279,7 @@ class StockMarketSimulation(BaseEnvironment):
                 prices,
                 self.step_indicator,
                 today_volume,
+                volumes,
                 self.volume_importance
                 )
         return curr_optimization_metric
