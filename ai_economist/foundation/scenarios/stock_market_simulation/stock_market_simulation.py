@@ -272,7 +272,7 @@ class StockMarketSimulation(BaseEnvironment):
                 reward /= (max_reward * self.num_agents)
             curr_optimization_metric[
                 agent.idx
-            ] = 0.0
+            ] = reward
             
         # Optimization metric for the planner:
         curr_optimization_metric[
