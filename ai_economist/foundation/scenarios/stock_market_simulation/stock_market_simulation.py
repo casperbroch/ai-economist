@@ -305,7 +305,8 @@ class StockMarketSimulation(BaseEnvironment):
         curr_optimization_metric[
             self.world.planner.idx
         ] = rewards.planner_reward_total(
-                avg_trust
+                avg_trust,
+                self.world.agents[0]
             )
         
         
@@ -315,8 +316,8 @@ class StockMarketSimulation(BaseEnvironment):
                 print("agent reward: ",curr_optimization_metric[agent.idx])
                 
         if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
-                print("Lower or bigger than 0 for planner")
-                print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
+                #print("Lower or bigger than 0 for planner")
+                #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
 
                 
         return curr_optimization_metric
