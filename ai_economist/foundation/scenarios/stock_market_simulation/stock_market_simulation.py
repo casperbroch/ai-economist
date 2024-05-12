@@ -288,7 +288,6 @@ class StockMarketSimulation(BaseEnvironment):
                 prices,
                 self.step_indicator,
                 volumes,
-                self.world.agents[0],
                 self.volume_importance,
                 )
         
