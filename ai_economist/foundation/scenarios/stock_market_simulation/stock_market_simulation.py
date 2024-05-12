@@ -168,8 +168,7 @@ class StockMarketSimulation(BaseEnvironment):
 
         obs_dict[self.world.planner.idx] = {
             "avg_balance": avg_balance,
-            "avg_trust": avg_trust,
-            "abl_trade": abl_trade
+            "abl_trade": abl_trade,
         }
         
 
@@ -264,18 +263,12 @@ class StockMarketSimulation(BaseEnvironment):
 
         max_reward = 0
         for agent in agents:
-            curr_reward = rewards.agent_reward_total(
-                agent.state["endogenous"]["TotalBalance"],
-                max_balance,
-            )
+            curr_reward = agent.state["endogenous"]["TotalBalance"]
             if curr_reward > max_reward:
                 max_reward = curr_reward
         # Optimization metric for agents:
         for agent in agents:
-            reward = rewards.agent_reward_total(
-                agent.state["endogenous"]["TotalBalance"],
-                max_balance,
-            )
+            reward = agent.state["endogenous"]["TotalBalance"]
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
                 reward /= (max_reward * self.num_agents)
@@ -303,7 +296,7 @@ class StockMarketSimulation(BaseEnvironment):
             
         self.average_planner_reward += curr_optimization_metric[self.world.planner.idx]
         if self.step_indicator == 100:
-            self.average_planner_reward = self.average_planner_reward / 100
+            self.average_planner_reward = self.average_planner_reward / 101
             print("Average reward of the planner after 101 days", self.average_planner_reward)
 
                 
