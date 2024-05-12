@@ -261,6 +261,7 @@ class StockMarketSimulation(BaseEnvironment):
         
         avg_trust = avg_trust / self.num_agents
 
+        max_reward = 0
         for agent in agents:
             curr_reward = rewards.agent_reward_total(
                 agent.state["endogenous"]["TotalBalance"],
