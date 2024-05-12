@@ -302,8 +302,8 @@ class StockMarketSimulation(BaseEnvironment):
                 pass
             
         self.average_planner_reward += curr_optimization_metric[self.world.planner.idx]
-        if self.step_indicator == 101:
-            self.average_planner_reward = self.average_planner_reward / 101
+        if self.step_indicator == 100:
+            self.average_planner_reward = self.average_planner_reward / 100
             print("Average reward of the planner after 101 days", self.average_planner_reward)
 
                 
