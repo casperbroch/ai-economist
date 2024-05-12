@@ -22,7 +22,6 @@ class StockMarketSimulation(BaseEnvironment):
     market = StockMarket("MSFT")
     
     step_indicator = 0
-    avg_correct = 0
 
 
     def __init__(
@@ -295,16 +294,6 @@ class StockMarketSimulation(BaseEnvironment):
                 print("Problem !!, lower or bigger than 0 for planner")
                 print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
             
-        for agent in agents:
-            self.avg_correct += agent.state["endogenous"]["Test"]
-        
-        if self.step_indicator == 100:
-            print(self.avg_correct)
-            self.avg_correct = self.avg_correct / 4
-            print(self.avg_correct)
-            self.avg_correct = self.avg_correct / 101
-            print(self.avg_correct)
-            print("")
                 
         return curr_optimization_metric
     
