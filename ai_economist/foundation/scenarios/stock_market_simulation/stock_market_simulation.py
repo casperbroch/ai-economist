@@ -279,14 +279,17 @@ class StockMarketSimulation(BaseEnvironment):
 
         # Find the largest balance among agents and compute the today's volume
         max_balance = 0.0
+        avg_trust = 0.0
         for agent in agents:
             if agent.state["endogenous"]["TotalBalance"] > max_balance:
                 max_balance = agent.state["endogenous"]["TotalBalance"]
+                avg_trust += agent.state["endogenous"]["Trust"]
         
         # Find prices and volumes arrays
         prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
         volumes = self.world.agents[0].state["endogenous"]["Volumes"]
         
+        avg_trust = avg_trust / self.num_agents
 
         # Optimization metric for agents:
         for agent in agents:
@@ -301,16 +304,10 @@ class StockMarketSimulation(BaseEnvironment):
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
-        ] = rewards.reward_function_planner(
-                prices,
-                self.step_indicator,
-                volumes,
-                self.volume_importance,
-                )
+        ] = rewards.planner_reward_total(
+                avg_trust
+            )
         
-        curr_optimization_metric[
-            self.world.planner.idx
-        ] = 1.0
         
         for agent in agents:
             if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:

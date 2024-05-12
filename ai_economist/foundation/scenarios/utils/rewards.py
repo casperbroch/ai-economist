@@ -140,6 +140,9 @@ def agent_reward_total(balance, max_balance, trust):
     # Transform total reward to be [-1,1]
     return reward 
 
+def planner_reward_total(avg_trust):
+    return avg_trust
+
     
 def planner_metric_stability(prices, index):
     if index > 1:
