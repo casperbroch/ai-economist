@@ -14,7 +14,7 @@ class ExecCircuitBreaker(BaseComponent):
     ):
         super().__init__(*base_component_args, **base_component_kwargs)
 
-        self.no_actions = 1
+        self.no_actions = 2
 
     def get_additional_state_fields(self, agent_cls_name):
         return {}
@@ -29,27 +29,29 @@ class ExecCircuitBreaker(BaseComponent):
 
     def generate_masks(self, completions=0):
         masks = {}
-        masks[self.world.planner.idx] = [1 for _ in range(self.no_actions)]
+        masks[self.world.planner.idx] = np.ones(int(self.no_actions))
         return masks
 
     def component_step(self):
         planner_action = self.world.planner.get_component_action(self.name)
  
         
-        if 0 <= planner_action <= 1: # Make sure the planner action is legal        
-            # Let the market run its course and don't block trading
+        if 0 <= planner_action <= self.no_actions: # Make sure the planner action is legal        
             if planner_action == 0:
+                # Agent does nothing
+                pass
+            # Let the market run its course and don't block trading
+            if planner_action == 1:
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 0
                     agent.state["endogenous"]["AbleToSell"] = 0
 
             # Execute circuit breaker and block trading
-            if planner_action == 1:
+            if planner_action == 2:
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 1
                     agent.state["endogenous"]["AbleToSell"] = 1
-                
-        
+         
         else: 
             raise ValueError
 
