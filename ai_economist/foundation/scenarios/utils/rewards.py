@@ -141,8 +141,8 @@ def agent_reward_total(balance, max_balance):
 
 def planner_reward_total(agent):
     if agent.state["endogenous"]["AbleToBuy"] == 0:
-        reward = 1.0
-    elif agent.state["endogenous"]["AbleToBuy"] == 1:
         reward = 0.0
+    elif agent.state["endogenous"]["AbleToBuy"] == 1:
+        reward = 1.0
     return reward
 
