@@ -53,8 +53,6 @@ class BuyOrSellStocks(BaseComponent):
             action = agent.get_component_action(self.name)
 
             if 0 <= action <= self.no_actions: # Agent action is legal    
-                print("Agent has made an action")
-                
                 available_funds = agent.state["endogenous"]["AvailableFunds"]
                 stock_price = agent.state["endogenous"]["StockPrice"]
                 number_of_stocks = agent.state["endogenous"]["NumberOfStocks"]
