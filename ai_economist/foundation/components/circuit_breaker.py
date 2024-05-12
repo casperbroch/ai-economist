@@ -38,8 +38,9 @@ class ExecCircuitBreaker(BaseComponent):
         
         if 0 <= planner_action <= self.no_actions: # Make sure the planner action is legal        
             if planner_action == 0:
-                # Agent does nothing
-                pass
+                for agent in self.world.get_random_order_agents():
+                    agent.state["endogenous"]["AbleToBuy"] = 1
+                    agent.state["endogenous"]["AbleToSell"] = 1
             # Let the market run its course and don't block trading
             if planner_action == 1:
                 for agent in self.world.get_random_order_agents():
