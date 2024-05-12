@@ -196,7 +196,6 @@ class StockMarketSimulation(BaseEnvironment):
             for k, v in curr_optimization_metrics.items()
         }
         self.curr_optimization_metrics = curr_optimization_metrics
-        print(planner_agents_rew)
         return planner_agents_rew
 
     # Optional methods for customization
@@ -272,7 +271,7 @@ class StockMarketSimulation(BaseEnvironment):
             reward = agent.state["endogenous"]["TotalBalance"]
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
-                reward /= (max_reward * self.num_agents)
+                reward /= (max_reward * 16 )#self.num_agents)
             curr_optimization_metric[
                 agent.idx
             ] = reward
