@@ -196,6 +196,7 @@ class StockMarketSimulation(BaseEnvironment):
             for k, v in curr_optimization_metrics.items()
         }
         self.curr_optimization_metrics = curr_optimization_metrics
+        print(planner_agents_rew)
         return planner_agents_rew
 
     # Optional methods for customization
@@ -297,8 +298,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.average_planner_reward += curr_optimization_metric[self.world.planner.idx]
         if self.step_indicator == 100:
             self.average_planner_reward = self.average_planner_reward / 101
-            print("Average reward of the planner after 101 days", self.average_planner_reward)
-
+            print("Average reward of planner after 101 days", self.average_planner_reward)
                 
         return curr_optimization_metric
     
