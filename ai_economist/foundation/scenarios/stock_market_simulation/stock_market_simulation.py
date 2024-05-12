@@ -300,6 +300,10 @@ class StockMarketSimulation(BaseEnvironment):
                 max_balance,
                 agent.state["endogenous"]["Trust"]
             )
+            
+            curr_optimization_metric[
+                agent.idx
+            ] = 1.0
                 
         # Optimization metric for the planner:
         curr_optimization_metric[
