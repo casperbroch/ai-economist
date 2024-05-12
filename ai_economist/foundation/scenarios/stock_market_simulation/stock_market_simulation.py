@@ -18,7 +18,7 @@ from ai_economist.foundation.base.stock_market import StockMarket
 class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
-    required_entities = ["TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
+    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
     market = StockMarket("MSFT")
     
     step_indicator = 0
@@ -72,6 +72,7 @@ class StockMarketSimulation(BaseEnvironment):
             # This will set all variables to 0
             agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
             
+            agent.state["endogenous"]["Trust"] = np.random.rand()
             
             # There are 100 stocks left to begin with
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
@@ -120,6 +121,15 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+            
+            if agent.state["endogenous"]["AbleToBuy"] == 0.0 and agent.state["endogenous"]["AbleToSell"] == 0.0:
+                agent.state["endogenous"]["Trust"] += 0.01
+                if agent.state["endogenous"]["Trust"] > 1.0:
+                    agent.state["endogenous"]["Trust"] == 1.0
+            elif agent.state["endogenous"]["AbleToBuy"] == 1.0 and agent.state["endogenous"]["AbleToSell"] == 1.0:
+                agent.state["endogenous"]["Trust"] -= 0.1
+                if agent.state["endogenous"]["Trust"] < 0.0:
+                    agent.state["endogenous"]["Trust"] == 0.0
         
 
     def generate_observations(self):
@@ -152,17 +162,25 @@ class StockMarketSimulation(BaseEnvironment):
         volumes = self.world.agents[0].state["endogenous"]["Volumes"]
         total_demand = 0.0
         total_supply = 0.0
+        
+        avg_balance = 0.0
+        avg_trust = 0.0
         for agent in self.world.agents:
+            avg_balance += agent.state["endogenous"]["TotalBalance"]
+            avg_trust += agent.state["endogenous"]["Trust"]
+
+            
             total_demand += agent.state["endogenous"]["Demand"]
             total_supply += agent.state["endogenous"]["Supply"]
 
         volume = total_demand + total_supply
+        
+        avg_balance = avg_balance / self.num_agents
+        avg_trust = avg_trust / self.num_agents
 
         obs_dict[self.world.planner.idx] = {
-            "volume": volume,
-            "total_demand": total_demand,
-            "total_supply": total_supply,
-            "stocks_left": stocks_left
+            "avg_balance": avg_balance,
+            "avg_trust": avg_trust,
         }
         
 
@@ -278,7 +296,8 @@ class StockMarketSimulation(BaseEnvironment):
                 agent.idx
             ] = rewards.agent_reward_total(
                 agent.state["endogenous"]["TotalBalance"],
-                max_balance
+                max_balance,
+                agent.state["endogenous"]["Trust"]
             )
                 
         # Optimization metric for the planner:
@@ -290,6 +309,10 @@ class StockMarketSimulation(BaseEnvironment):
                 volumes,
                 self.volume_importance,
                 )
+        
+        curr_optimization_metric[
+            self.world.planner.idx
+        ] = 1.0
         
         for agent in agents:
             if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:

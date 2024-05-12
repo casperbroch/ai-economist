@@ -134,8 +134,9 @@ def inv_income_weighted_utility(coin_endowments, utilities):
     return np.sum(utilities * pareto_weights)
 
 
-def agent_reward_total(balance, max_balance):
-    reward = balance/max_balance
+def agent_reward_total(balance, max_balance, trust):
+    balance_reward = balance/max_balance
+    reward = 0.5*balance_reward + 0.5*trust
     # Transform total reward to be [-1,1]
     return reward 
 
@@ -177,26 +178,26 @@ def reward_function_liquidity(index, volume, volumes):
 
 def reward_function_planner(prices, index, volumes, volume_weight=0.5):
    # Gathered from base data
-    AVERAGE_VOLUME = 27.61291121680539
-    AVERAGE_STDV = 7.880280857892539
+    #AVERAGE_VOLUME = 27.61291121680539
+    #AVERAGE_STDV = 7.880280857892539
     
     # Get target values which the planner wants to achieve
-    target_volume = 1.1 * AVERAGE_VOLUME
-    target_std_dev = 0.9 * AVERAGE_STDV
+    #target_volume = 1.1 * AVERAGE_VOLUME
+    #target_std_dev = 0.9 * AVERAGE_STDV
     
     # Get standard deviation from past 5 timesteps
-    std_dev = planner_metric_stability(prices, index)
+    #std_dev = planner_metric_stability(prices, index)
     
-    volume = volumes[index]
-    max_vol = max(volumes)
+    #volume = volumes[index]
+    #max_vol = max(volumes)
             
-    if max_vol == 0.0:
-        vol_reward = 0.0
-    else:
-        vol_reward = volume/max_vol
+    #if max_vol == 0.0:
+    #    vol_reward = 0.0
+    #else:
+    #    vol_reward = volume/max_vol
         
     # Calculate std_dev deviation from target
-    std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
+    #std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
     
     # Reward is a combination of volume and std_dev deviation
     #reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)

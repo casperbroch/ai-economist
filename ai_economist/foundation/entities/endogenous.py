@@ -30,6 +30,12 @@ endogenous_registry = Registry(Endogenous)
 
     
 @endogenous_registry.add
+class Trust(Endogenous):
+    """The Trust level of a person"""
+
+    name = "Trust"
+    
+@endogenous_registry.add
 class TotalBalance(Endogenous):
     """The amount of money a person holds (stocks + available funds)"""
 
