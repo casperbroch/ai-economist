@@ -38,6 +38,9 @@ class ExecCircuitBreaker(BaseComponent):
     def component_step(self):
         planner_action = self.world.planner.get_component_action(self.name)
         
+        print(" ")
+        print("Begin, planner made action ", planner_action)
+        
         if 0 <= planner_action <= 1: # Make sure the planner action is legal        
             # Let the market run its course and don't block trading
             if planner_action == 0:
