@@ -259,21 +259,27 @@ class StockMarketSimulation(BaseEnvironment):
                 max_balance = agent.state["endogenous"]["TotalBalance"]
                 avg_trust += agent.state["endogenous"]["Trust"]
         
-        # Find prices and volumes arrays
-        prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
-        volumes = self.world.agents[0].state["endogenous"]["Volumes"]
-        
         avg_trust = avg_trust / self.num_agents
 
-        # Optimization metric for agents:
         for agent in agents:
-            curr_optimization_metric[
-                agent.idx
-            ] = rewards.agent_reward_total(
+            curr_reward = rewards.agent_reward_total(
                 agent.state["endogenous"]["TotalBalance"],
                 max_balance,
-                agent.state["endogenous"]["Trust"]
             )
+            if curr_reward > max_reward:
+                max_reward = curr_reward
+        # Optimization metric for agents:
+        for agent in agents:
+            reward = rewards.agent_reward_total(
+                agent.state["endogenous"]["TotalBalance"],
+                max_balance,
+            )
+            # scale rewards from 0 to 1, otherwise planner doesn't learn
+            if max_reward > 0:
+                reward /= (max_reward * self.num_agents)
+            curr_optimization_metric[
+                agent.idx
+            ] = reward
             
         # Optimization metric for the planner:
         curr_optimization_metric[

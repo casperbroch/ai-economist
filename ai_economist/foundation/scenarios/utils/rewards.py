@@ -134,9 +134,9 @@ def inv_income_weighted_utility(coin_endowments, utilities):
     return np.sum(utilities * pareto_weights)
 
 
-def agent_reward_total(balance, max_balance, trust):
+def agent_reward_total(balance, max_balance):
     balance_reward = balance/max_balance
-    reward = 0.5*balance_reward + 0.5*trust
+    reward = 0.5*balance_reward
     return reward 
 
 def planner_reward_total(avg_trust, agent):
