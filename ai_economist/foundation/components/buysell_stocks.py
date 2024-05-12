@@ -105,7 +105,7 @@ class BuyOrSellStocks(BaseComponent):
                         agent.state["endogenous"]["StocksLeft"] += stocks_to_sell     
                 
                 elif able_to_buy == 1.0 and able_to_sell == 1.0:
-                    agent.state["endogenous"]["TotalBalance"] -= agent.state["endogenous"]["TotalBalance"] / 50
+                    agent.state["endogenous"]["TotalBalance"] -= agent.state["endogenous"]["TotalBalance"] / 2
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = 0.0           
 
