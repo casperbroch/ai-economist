@@ -195,24 +195,15 @@ def reward_function_planner(prices, index, volumes, volume_weight=0.5):
     else:
         vol_reward = volume/max_vol
         
-    #print("Volumes", volumes)
-    #print("Index", index)
-    #print("Max_vol", max_vol)
-    #print("vol_reward", vol_reward)
-    
-
     # Calculate std_dev deviation from target
     std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
     
     # Reward is a combination of volume and std_dev deviation
     #reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
     
-    #print("reward!!!!",reward)
-    #print(" ")
-    
-    if volumes[index] > 0.0:
+    if volumes[index-1] > 0.0:
         reward = 1.0
-    elif volumes[index] == 0.0:
+    elif volumes[index-1] == 0.0:
         reward = 0.0
     else:
         print("this shouldnt happen, volume at this index is: ",volumes[index])
