@@ -122,7 +122,6 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
         
 
-
     def generate_observations(self):
         """
         Generate observations associated with this scenario.
@@ -289,7 +288,8 @@ class StockMarketSimulation(BaseEnvironment):
                 prices,
                 self.step_indicator,
                 volumes,
-                self.volume_importance
+                self.world.agents[0],
+                self.volume_importance,
                 )
         
         for agent in agents:

@@ -175,7 +175,7 @@ def reward_function_liquidity(index, volume, volumes):
     return vol_reward
 
 
-def reward_function_planner(prices, index, volumes, volume_weight=0.5):
+def reward_function_planner(prices, index, volumes, asingleagent, volume_weight=0.5):
    # Gathered from base data
     AVERAGE_VOLUME = 27.61291121680539
     AVERAGE_STDV = 7.880280857892539
@@ -201,9 +201,9 @@ def reward_function_planner(prices, index, volumes, volume_weight=0.5):
     # Reward is a combination of volume and std_dev deviation
     #reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
     
-    if volumes[index-1] > 0.0:
+    if asingleagent.state["endogenous"]["AbleToBuy"] == 0.0:
         reward = 1.0
-    elif volumes[index-1] == 0.0:
+    elif asingleagent.state["endogenous"]["AbleToBuy"] == 1.0:
         reward = 0.0
     else:
         print("this shouldnt happen, volume at this index is: ",volumes[index])
