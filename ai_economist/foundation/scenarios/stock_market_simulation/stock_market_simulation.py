@@ -277,9 +277,7 @@ class StockMarketSimulation(BaseEnvironment):
                 avg_trust,
                 self.world.agents[0]
             )
-        
-        print("This means, reward for this turn for planner is: ", curr_optimization_metric[self.world.planner.idx])
-        
+                
         for agent in agents:
             if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:
                 print("Lower or bigger than 0 for agent")
