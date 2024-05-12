@@ -196,7 +196,8 @@ class StockMarketSimulation(BaseEnvironment):
             for k, v in curr_optimization_metrics.items()
         }
         self.curr_optimization_metrics = curr_optimization_metrics
-        return curr_optimization_metrics
+        print(planner_agents_rew)
+        return planner_agents_rew
 
     # Optional methods for customization
     # ----------------------------------
