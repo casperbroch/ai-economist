@@ -17,6 +17,8 @@ class ExecCircuitBreaker(BaseComponent):
         self.no_actions = 1
 
     def get_additional_state_fields(self, agent_cls_name):
+        if agent_cls_name == "BasicPlanner":
+            return {"Blocked": 0}
         return {}
 
     def additional_reset_steps(self):
@@ -42,12 +44,15 @@ class ExecCircuitBreaker(BaseComponent):
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 0
                     agent.state["endogenous"]["AbleToSell"] = 0
+                    self.world.planner.state["Blocked"] = 0
 
             # Execute circuit breaker and block trading
             if planner_action == 1:
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 1
                     agent.state["endogenous"]["AbleToSell"] = 1
+                    self.world.planner.state["Blocked"] = 1
+
                 
         
         else: 
