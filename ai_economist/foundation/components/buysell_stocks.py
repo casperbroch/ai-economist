@@ -15,7 +15,6 @@ class BuyOrSellStocks(BaseComponent):
     ):
         super().__init__(*base_component_args, **base_component_kwargs)
 
-        # TODO: determine actual price of RECs
         self.transaction_cost = 0.0075
 
         # this defines the maximum # of rec packages (each 5% of their energy consumption) an agent can purchase
@@ -32,13 +31,6 @@ class BuyOrSellStocks(BaseComponent):
             return self.no_actions
         return None
 
-     # def generate_masks(self, completions=0):
-    #     if self.is_first_step:
-    #         self.is_first_step = False
-    #         if self.mask_first_step:
-    #             return self.common_mask_off
-
-    #     return self.common_mask_on
 
     def generate_masks(self, completions=0):
         masks = {}

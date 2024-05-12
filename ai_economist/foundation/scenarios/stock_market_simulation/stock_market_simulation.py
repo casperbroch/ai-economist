@@ -122,12 +122,6 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
             
-            if agent.state["endogenous"]["AbleToBuy"] == 0.0 and agent.state["endogenous"]["AbleToSell"] == 0.0:
-                if agent.state["endogenous"]["Trust"] < 0.99:
-                    agent.state["endogenous"]["Trust"] += 0.01
-            elif agent.state["endogenous"]["AbleToBuy"] == 1.0 and agent.state["endogenous"]["AbleToSell"] == 1.0:
-                if agent.state["endogenous"]["Trust"] > 0.1:
-                    agent.state["endogenous"]["Trust"] -= 0.1
         
 
     def generate_observations(self):
@@ -154,12 +148,6 @@ class StockMarketSimulation(BaseEnvironment):
                 "Endogenous-" + k: v for k, v in agent.endogenous.items() if (k != "Volumes" or k != "StocksLeft" )
             }
         
-            
-        prices_history = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
-        stocks_left =  self.world.agents[0].state["endogenous"]["StocksLeft"]
-        volumes = self.world.agents[0].state["endogenous"]["Volumes"]
-        total_demand = 0.0
-        total_supply = 0.0
         
         avg_balance = 0.0
         avg_trust = 0.0
@@ -167,11 +155,6 @@ class StockMarketSimulation(BaseEnvironment):
             avg_balance += agent.state["endogenous"]["TotalBalance"]
             avg_trust += agent.state["endogenous"]["Trust"]
 
-            
-            total_demand += agent.state["endogenous"]["Demand"]
-            total_supply += agent.state["endogenous"]["Supply"]
-
-        volume = total_demand + total_supply
         
         avg_balance = avg_balance / self.num_agents
         avg_trust = avg_trust / self.num_agents
@@ -244,22 +227,6 @@ class StockMarketSimulation(BaseEnvironment):
         
         metrics["system/volume"] = volume
 
-        # Log average endogenous, and utility for agents
-        agent_endogenous = {}
-        agent_utilities = []
-        for agent in self.world.agents:
-            for endogenous, quantity in agent.endogenous.items():
-                if endogenous not in agent_endogenous:
-                    agent_endogenous[endogenous] = []
-                agent_endogenous[endogenous].append(quantity)
-
-            agent_utilities.append(self.curr_optimization_metrics[agent.idx])
-
-        for endogenous, quantities in agent_endogenous.items():
-            metrics["endogenous/avg_agent/{}".format(endogenous)] = np.mean(quantities)
-
-        metrics["util/avg_agent"] = np.mean(agent_utilities)
-
         # Log utility for the planner
 
         metrics["util/p"] = self.curr_optimization_metrics[self.world.planner.idx]
@@ -301,10 +268,6 @@ class StockMarketSimulation(BaseEnvironment):
                 agent.state["endogenous"]["Trust"]
             )
             
-            curr_optimization_metric[
-                agent.idx
-            ] = 1.0
-                
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx

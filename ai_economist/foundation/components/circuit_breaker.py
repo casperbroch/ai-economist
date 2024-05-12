@@ -23,21 +23,12 @@ class ExecCircuitBreaker(BaseComponent):
         return {}
 
     def additional_reset_steps(self):
-        
         self.is_first_step = True
 
     def get_n_actions(self, agent_cls_name):
         if agent_cls_name == "BasicPlanner":
             return self.no_actions
         return None
-
-     # def generate_masks(self, completions=0):
-    #     if self.is_first_step:
-    #         self.is_first_step = False
-    #         if self.mask_first_step:
-    #             return self.common_mask_off
-
-    #     return self.common_mask_on
 
     def generate_masks(self, completions=0):
         masks = {}

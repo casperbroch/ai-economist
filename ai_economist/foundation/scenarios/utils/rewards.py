@@ -143,8 +143,8 @@ def agent_reward_total(balance, max_balance, trust):
 def planner_reward_total(avg_trust, agent):
     if agent.state["endogenous"]["AbleToBuy"] == 0.0:
         reward = 1000000
-    else:
-        reward = 0.0
+    elif agent.state["endogenous"]["AbleToBuy"] == 1.0:
+        reward = -100000
     return reward
 
     
