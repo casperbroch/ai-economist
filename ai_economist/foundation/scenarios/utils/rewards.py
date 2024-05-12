@@ -139,80 +139,10 @@ def agent_reward_total(balance, max_balance):
     reward = 0.5*balance_reward
     return reward 
 
-def planner_reward_total(avg_trust, agent):
+def planner_reward_total(agent):
     if agent.state["endogenous"]["AbleToBuy"] == 0:
         reward = 1.0
     elif agent.state["endogenous"]["AbleToBuy"] == 1:
         reward = 0.0
     return reward
 
-    
-def planner_metric_stability(prices, index):
-    if index > 1:
-        price_diffs = [prices[i] - prices[i-1] for i in range(index)]
-    elif index >= 10:
-        price_diffs = [prices[i] - prices[i-1] for i in range(index-10, index)]
-    else:
-        return 0.0
-    
-    negative_diffs = [diff for diff in price_diffs if diff < 0]  # Filter only negative differences
-    
-    if len(negative_diffs) == 0:
-        return 0.0
-    
-    std = np.std(negative_diffs)
-    
-    #file_path = 'C:\\Users\\caspe\\Desktop\\stdvs.csv'
-    # Writing to CSV
-    #with open(file_path, mode='a', newline='') as file:
-    #    writer = csv.writer(file)
-    #    writer.writerow([std])
-    
-    return std
-    
-def reward_function_liquidity(index, volume, volumes):
-
-    max_vol = max(volumes[:index+1])
-            
-    if max_vol == 0:
-        vol_reward = 0.0
-    else:
-        vol_reward = volume/max_vol
-
-    return vol_reward
-
-
-def reward_function_planner(prices, index, volumes, volume_weight=0.5):
-   # Gathered from base data
-    #AVERAGE_VOLUME = 27.61291121680539
-    #AVERAGE_STDV = 7.880280857892539
-    
-    # Get target values which the planner wants to achieve
-    #target_volume = 1.1 * AVERAGE_VOLUME
-    #target_std_dev = 0.9 * AVERAGE_STDV
-    
-    # Get standard deviation from past 5 timesteps
-    #std_dev = planner_metric_stability(prices, index)
-    
-    #volume = volumes[index]
-    #max_vol = max(volumes)
-            
-    #if max_vol == 0.0:
-    #    vol_reward = 0.0
-    #else:
-    #    vol_reward = volume/max_vol
-        
-    # Calculate std_dev deviation from target
-    #std_dev_deviation = abs(std_dev - target_std_dev) / target_std_dev
-    
-    # Reward is a combination of volume and std_dev deviation
-    #reward = ((1 - volume_weight) * (1 - std_dev_deviation)) + (volume_weight * vol_reward)
-    
-    if volumes[index] > 0.0:
-        reward = 1.0
-    elif volumes[index] == 0.0:
-        reward = 0.0
-    else:
-        print("this shouldnt happen, volume at this index is: ",volumes[index])
-        
-    return reward

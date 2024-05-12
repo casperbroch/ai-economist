@@ -271,7 +271,7 @@ class StockMarketSimulation(BaseEnvironment):
             reward = agent.state["endogenous"]["TotalBalance"]
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
-                reward /= (max_reward * 16 )#self.num_agents)
+                reward /= (max_reward * self.num_agents)
             curr_optimization_metric[
                 agent.idx
             ] = reward
@@ -280,19 +280,19 @@ class StockMarketSimulation(BaseEnvironment):
         curr_optimization_metric[
             self.world.planner.idx
         ] = rewards.planner_reward_total(
-                avg_trust,
+                # just getting an agent since abletobuy and abletosell is the same for all agents
+                # only for testing purposes right now
                 self.world.agents[0]
             )
                 
         for agent in agents:
             if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:
-                print("Lower or bigger than 0 for agent")
+                print("Problem!!, lower or bigger than 0 for agent")
                 print("agent reward: ",curr_optimization_metric[agent.idx])
                 
         if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
-                print("Lower or bigger than 0 for planner")
+                print("Problem !!, lower or bigger than 0 for planner")
                 print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
-                pass
             
         self.average_planner_reward += curr_optimization_metric[self.world.planner.idx]
         if self.step_indicator == 100:
