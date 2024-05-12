@@ -139,10 +139,10 @@ def agent_reward_total(balance, max_balance):
     reward = 0.5*balance_reward
     return reward 
 
-def planner_reward_total(world):
-    if world.planner.state["Blocked"] == 0:
+def planner_reward_total(agent):
+    if agent.state["endogenous"]["AbleToBuy"] == 0:
         reward = 1.0
-    elif world.planner.state["Blocked"] == 1:
+    elif agent.state["endogenous"]["AbleToBuy"] == 1:
         reward = 0.0
     return reward
 

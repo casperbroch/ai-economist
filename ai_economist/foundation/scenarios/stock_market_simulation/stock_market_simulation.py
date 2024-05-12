@@ -18,7 +18,7 @@ from ai_economist.foundation.base.stock_market import StockMarket
 class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
-    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes"]
+    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
     market = StockMarket("MSFT")
     
     step_indicator = 0
@@ -162,11 +162,11 @@ class StockMarketSimulation(BaseEnvironment):
         
         avg_balance = avg_balance / self.num_agents
         avg_trust = avg_trust / self.num_agents
-        blocked = self.world.planner.state["Blocked"]
+        abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
 
         obs_dict[self.world.planner.idx] = {
             "avg_balance": avg_balance,
-            "abl_trade": blocked,
+            "abl_trade": abl_trade,
         }
         
 
@@ -280,7 +280,7 @@ class StockMarketSimulation(BaseEnvironment):
         ] = rewards.planner_reward_total(
                 # just getting an agent since abletobuy and abletosell is the same for all agents
                 # only for testing purposes right now
-                self.world
+                self.world.agents[0]
             )
                 
         for agent in agents:
