@@ -74,7 +74,6 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["TotalBalance"] = agent.state["endogenous"]["AvailableFunds"] + (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] - (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] * transaction_cost))
                     agent.state["endogenous"]["Demand"] = stocks_to_buy
                     agent.state["endogenous"]["Supply"] = 0.0
-                    agent.state["endogenous"]["Test"] = 1
                     
                     for agent in self.world.agents:
                         agent.state["endogenous"]["StocksLeft"] -= stocks_to_buy
@@ -93,7 +92,6 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["TotalBalance"] = agent.state["endogenous"]["AvailableFunds"] + (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] - (agent.state["endogenous"]["NumberOfStocks"] * agent.state["endogenous"]["StockPrice"] * transaction_cost))
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = stocks_to_sell
-                    agent.state["endogenous"]["Test"] = 0
                     
                     for agent in self.world.agents:
                         agent.state["endogenous"]["StocksLeft"] += stocks_to_sell     

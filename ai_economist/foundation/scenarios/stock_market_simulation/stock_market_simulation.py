@@ -18,7 +18,7 @@ from ai_economist.foundation.base.stock_market import StockMarket
 class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
-    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell", "Test"]
+    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
     market = StockMarket("MSFT")
     
     step_indicator = 0
@@ -73,9 +73,9 @@ class StockMarketSimulation(BaseEnvironment):
             
             agent.state["endogenous"]["AbleToBuy"] = 1
             agent.state["endogenous"]["AbleToSell"] = 1
-            agent.state["endogenous"]["Test"] = 1
 
 
+            
             agent.state["endogenous"]["Trust"] = 1.0
             
             # There are 100 stocks left to begin with
@@ -269,12 +269,10 @@ class StockMarketSimulation(BaseEnvironment):
             reward = agent.state["endogenous"]["TotalBalance"]
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
-                #reward /= (max_reward * self.num_agents)
-                reward = agent.state["endogenous"]["Test"] / self.num_agents
-
+                reward /= (max_reward * self.num_agents)
             curr_optimization_metric[
                 agent.idx
-            ] = reward
+            ] = 0.0
             
         # Optimization metric for the planner:
         curr_optimization_metric[

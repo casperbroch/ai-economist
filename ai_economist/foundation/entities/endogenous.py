@@ -101,12 +101,6 @@ class Volumes(Endogenous):
 
     name = "Volumes"
     
-@endogenous_registry.add
-class Test(Endogenous):
-    """Variable for testing purposes"""
-
-    name = "Test"
-    
     
 
 
