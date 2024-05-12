@@ -123,13 +123,11 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
             
             if agent.state["endogenous"]["AbleToBuy"] == 0.0 and agent.state["endogenous"]["AbleToSell"] == 0.0:
-                agent.state["endogenous"]["Trust"] += 0.01
-                if agent.state["endogenous"]["Trust"] > 1.0:
-                    agent.state["endogenous"]["Trust"] == 1.0
+                if agent.state["endogenous"]["Trust"] < 0.99:
+                    agent.state["endogenous"]["Trust"] += 0.01
             elif agent.state["endogenous"]["AbleToBuy"] == 1.0 and agent.state["endogenous"]["AbleToSell"] == 1.0:
-                agent.state["endogenous"]["Trust"] -= 0.1
-                if agent.state["endogenous"]["Trust"] < 0.0:
-                    agent.state["endogenous"]["Trust"] == 0.0
+                if agent.state["endogenous"]["Trust"] > 0.1:
+                    agent.state["endogenous"]["Trust"] -= 0.1
         
 
     def generate_observations(self):
