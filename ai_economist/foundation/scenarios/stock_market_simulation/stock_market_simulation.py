@@ -158,10 +158,12 @@ class StockMarketSimulation(BaseEnvironment):
         
         avg_balance = avg_balance / self.num_agents
         avg_trust = avg_trust / self.num_agents
+        abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
 
         obs_dict[self.world.planner.idx] = {
             "avg_balance": avg_balance,
             "avg_trust": avg_trust,
+            "abl_trade": abl_trade
         }
         
 
