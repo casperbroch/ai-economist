@@ -56,7 +56,7 @@ class BuyOrSellStocks(BaseComponent):
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = 0.0
                       
-                elif action <= 10 and able_to_buy == 0: # Agent wants to buy stocks
+                elif action <= 10 and able_to_buy == 1: # Agent wants to buy stocks
                     # Compute what maximum amount of stocks able to buy is
                     max_stocks_buy = (available_funds - (available_funds * transaction_cost)) // stock_price
                     
@@ -79,7 +79,7 @@ class BuyOrSellStocks(BaseComponent):
                         agent.state["endogenous"]["StocksLeft"] -= stocks_to_buy
 
                     
-                elif 10 < action <= 20 and able_to_sell == 0: # Agent wants to sell stocks
+                elif 10 < action <= 20 and able_to_sell == 1: # Agent wants to sell stocks
                     # Compute how much stocks agent wants to sell (each integer step in action is 10%)
                     sell_percentage = (action-10) * 0.10
                     stocks_to_sell = math.floor(number_of_stocks * sell_percentage)
@@ -96,7 +96,7 @@ class BuyOrSellStocks(BaseComponent):
                     for agent in self.world.agents:
                         agent.state["endogenous"]["StocksLeft"] += stocks_to_sell     
                 
-                elif able_to_buy == 1 and able_to_sell == 1:
+                elif able_to_buy == 0 and able_to_sell == 0:
                     agent.state["endogenous"]["Demand"] = 0.0
                     agent.state["endogenous"]["Supply"] = 0.0           
 
