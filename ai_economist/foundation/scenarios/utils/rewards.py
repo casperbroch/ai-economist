@@ -214,5 +214,7 @@ def reward_function_planner(prices, index, volumes, volume_weight=0.5):
         reward = 1.0
     elif volumes[index] == 0.0:
         reward = 0.0
+    else:
+        print("this shouldnt happen, volume at this index is: ",volumes[index])
         
     return reward
