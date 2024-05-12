@@ -22,6 +22,7 @@ class StockMarketSimulation(BaseEnvironment):
     market = StockMarket("MSFT")
     
     step_indicator = 0
+    average_planner_reward = 0
 
 
 
@@ -296,9 +297,14 @@ class StockMarketSimulation(BaseEnvironment):
                 print("agent reward: ",curr_optimization_metric[agent.idx])
                 
         if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
-                #print("Lower or bigger than 0 for planner")
-                #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
+                print("Lower or bigger than 0 for planner")
+                print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
                 pass
+            
+        self.average_planner_reward += curr_optimization_metric[self.world.planner.idx]
+        if self.step_indicator == 101:
+            self.average_planner_reward = self.average_planner_reward / 101
+            print("Average reward of the planner after 101 days", self.average_planner_reward)
 
                 
         return curr_optimization_metric
