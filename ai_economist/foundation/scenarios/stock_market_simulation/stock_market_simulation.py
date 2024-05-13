@@ -287,7 +287,7 @@ class StockMarketSimulation(BaseEnvironment):
                 # Divide by max reward to get a reward [0,1]
                 reward /= max_reward
                 # Divide reward for balance and trust equally
-                reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
+                # reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
                 # Divide by number of agents
                 reward /= self.num_agents
 
