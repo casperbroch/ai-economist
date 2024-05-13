@@ -132,11 +132,11 @@ class StockMarketSimulation(BaseEnvironment):
             # Lower or raise trust, based on if the agents were able to trade today
             if able_to_trade == 1:
                 agent.state["endogenous"]["Trust"] += 0.01 
-                if agent.state["endogenous"]["Trust"] > 1.0:
+                if agent.state["endogenous"]["Trust"] >= 1.0:
                     agent.state["endogenous"]["Trust"] = 1.0
             elif able_to_trade == 0:          
                 agent.state["endogenous"]["Trust"] -= 0.1
-                if agent.state["endogenous"]["Trust"] < 0.0:
+                if agent.state["endogenous"]["Trust"] <= 0.0:
                     agent.state["endogenous"]["Trust"] = 0.0
             
         
@@ -241,17 +241,15 @@ class StockMarketSimulation(BaseEnvironment):
         """
         metrics = dict()
         
-        total_demand = 0.0
-        total_supply = 0.0
+        avg_balance = 0.0
+        avg_trust = 0.0
         for agent in self.world.agents:
-            total_demand += agent.state["endogenous"]["Demand"]
-            total_supply += agent.state["endogenous"]["Supply"]
+            avg_balance += agent.state["endogenous"]["TotalBalance"]
+            avg_trust += agent.state["endogenous"]["Trust"]
 
-        volume = total_demand + total_supply
         
-        metrics["system/volume"] = volume
-
-        # Log utility for the planner
+        metrics["system/avg_balance"] = avg_balance
+        metrics["system/avg_trust"] = avg_trust
 
         metrics["util/p"] = self.curr_optimization_metrics[self.world.planner.idx]
 
