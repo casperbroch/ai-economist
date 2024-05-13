@@ -61,6 +61,7 @@ class StockMarketSimulation(BaseEnvironment):
         Here, empty inventories, give mobile agents any starting coin, and place them
         in random accesible locations to start.
         """
+        self.random_stock_crash = np.random.randint(100)
         self.step_indicator = 0
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
