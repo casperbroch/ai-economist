@@ -74,8 +74,6 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["AbleToBuy"] = 1
             agent.state["endogenous"]["AbleToSell"] = 1
 
-
-            
             agent.state["endogenous"]["Trust"] = 1.0
             
             # There are 100 stocks left to begin with
@@ -132,12 +130,12 @@ class StockMarketSimulation(BaseEnvironment):
             # Lower or raise trust, based on if the agents were able to trade today
             if able_to_trade == 1:
                 agent.state["endogenous"]["Trust"] += np.random.normal(0.01, 0.001) 
-                if agent.state["endogenous"]["Trust"] >= 1.0:
-                    agent.state["endogenous"]["Trust"] = 1.0
+                #if agent.state["endogenous"]["Trust"] >= 1.0:
+                #    agent.state["endogenous"]["Trust"] = 1.0
             elif able_to_trade == 0:          
                 agent.state["endogenous"]["Trust"] -= np.random.normal(0.1, 0.01) 
-                if agent.state["endogenous"]["Trust"] <= 0.0:
-                    agent.state["endogenous"]["Trust"] = 0.0
+                #if agent.state["endogenous"]["Trust"] <= 0.0:
+                #    agent.state["endogenous"]["Trust"] = 0.0
             
         
 
