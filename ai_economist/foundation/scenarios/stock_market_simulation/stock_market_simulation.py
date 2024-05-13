@@ -310,9 +310,9 @@ class StockMarketSimulation(BaseEnvironment):
                 print("agent reward: ",curr_optimization_metric[agent.idx])
                 
         if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
-                print("Problem !!, lower or bigger than 0 for planner")
-                print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
-            
+                #print("Problem !!, lower or bigger than 0 for planner")
+                #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
+            pass
                 
         return curr_optimization_metric
     
