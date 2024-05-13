@@ -120,8 +120,8 @@ class StockMarketSimulation(BaseEnvironment):
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
-        if self.step_indicator == self.random_stock_crash:
-            self.market.price = self.market.price / 2
+        #if self.step_indicator == self.random_stock_crash:
+        #    self.market.price = self.market.price / 2
         
         # Check to see if agents were able to trade today
         able_to_trade = agent.state["endogenous"]["AbleToBuy"]
