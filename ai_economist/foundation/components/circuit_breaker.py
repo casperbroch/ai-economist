@@ -14,6 +14,7 @@ class ExecCircuitBreaker(BaseComponent):
     ):
         super().__init__(*base_component_args, **base_component_kwargs)
 
+        self.let_p = np.random.randint(2)
         self.no_actions = 2
 
     def get_additional_state_fields(self, agent_cls_name):
@@ -36,18 +37,18 @@ class ExecCircuitBreaker(BaseComponent):
         planner_action = self.world.planner.get_component_action(self.name)
  
         if 0 <= planner_action <= self.no_actions: # Make sure the planner action is legal        
-            if planner_action == 0:
+            if planner_action == 0 and self.let_p == 1:
                 pass
             
             # Let the market run its course and don't block trading
-            if planner_action == 1:
+            if planner_action == 1 and self.let_p == 1:
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 1
                     agent.state["endogenous"]["AbleToSell"] = 1
                     
 
             # Execute circuit breaker and block trading
-            if planner_action == 2:
+            if planner_action == 2 and self.let_p == 1:
                 for agent in self.world.get_random_order_agents():
                     agent.state["endogenous"]["AbleToBuy"] = 0
                     agent.state["endogenous"]["AbleToSell"] = 0
