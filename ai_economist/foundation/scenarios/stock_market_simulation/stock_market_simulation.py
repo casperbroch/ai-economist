@@ -282,29 +282,18 @@ class StockMarketSimulation(BaseEnvironment):
 
         for agent in agents:
             reward = agent.state["endogenous"]["TotalBalance"] / agent.state["endogenous"]["StartingFunds"]
-
+            reward /= self.n_agents
             curr_optimization_metric[
                 agent.idx
             ] = reward
             
         # Optimization metric for the planner:
+        
+        able_to_buy = agent.state["endogenous"]["AbleToBuy"]
         curr_optimization_metric[
             self.world.planner.idx
-        ] = 1.0
+        ] = able_to_buy
         
-        if self.world.timestep == 100:
-            average_total_balance = 0
-            for agent in agents:
-                average_total_balance += agent.state["endogenous"]["TotalBalance"]
-            
-            average_total_balance /= self.num_agents
-            
-            file_path = 'C:\\Users\\caspe\\Desktop\\volumes.csv'
-            with open(file_path, mode='a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([average_total_balance])
-            
-                
                 
         return curr_optimization_metric
     
