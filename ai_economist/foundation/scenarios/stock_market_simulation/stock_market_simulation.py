@@ -118,8 +118,8 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        #self.market.nextstep(total_supply, total_demand, self.stock_quantity)
-        self.market.nextsteprandom()
+        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        #self.market.nextsteprandom()
 
         # Compute total volume
         volume = total_supply + total_demand
@@ -158,10 +158,16 @@ class StockMarketSimulation(BaseEnvironment):
         
         # OBSERVATIONS FOR AGENTS
         obs_dict = dict()
+        
+        total_supply = 0
+        total_demand = 0
         for agent in self.world.agents:
-            
+            total_demand += agent.state["endogenous"]["Demand"]
+            total_supply += agent.state["endogenous"]["Supply"]
+
+        for agent in self.world.agents:
             obs_dict[agent.idx] = {
-                "Endogenous-StockPriceHistory": agent.state["endogenous"]["StockPriceHistory"],
+                #"Endogenous-StockPriceHistory": agent.state["endogenous"]["StockPriceHistory"],
                 "Endogenous-StockPrice": agent.state["endogenous"]["StockPrice"],
                 "Endogenous-StockPriceHigh": agent.state["endogenous"]["StockPriceHigh"],
                 "Endogenous-StockPriceLow": agent.state["endogenous"]["StockPriceLow"],
@@ -169,6 +175,8 @@ class StockMarketSimulation(BaseEnvironment):
                 "Endogenous-AvailableFunds": agent.state["endogenous"]["AvailableFunds"],
                 "Endogenous-Demand": agent.state["endogenous"]["Demand"],
                 "Endogenous-Supply": agent.state["endogenous"]["Supply"],
+                "Endogenous-TotalDemand": agent.state["endogenous"]["TotalDemand"],
+                "Endogenous-TotalSupply": agent.state["endogenous"]["TotalSupply"],
                 #"Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
                 #"Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
             }
