@@ -160,15 +160,15 @@ class StockMarketSimulation(BaseEnvironment):
         for agent in self.world.agents:
             
             obs_dict[agent.idx] = {
-                "Endogenous-StockPrice": agent.state["Endogenous"]["StockPrice"],
-                "Endogenous-StockPriceHigh": agent.state["Endogenous"]["StockPriceHigh"],
-                "Endogenous-StockPriceLow": agent.state["Endogenous"]["StockPriceLow"],
-                "Endogenous-TotalBalance": agent.state["Endogenous"]["TotalBalance"],
-                "Endogenous-AvailableFunds": agent.state["Endogenous"]["AvailableFunds"],
-                "Endogenous-Demand": agent.state["Endogenous"]["Demand"],
-                "Endogenous-Supply": agent.state["Endogenous"]["Supply"],
-                "Endogenous-AbleToBuy": agent.state["Endogenous"]["AbleToBuy"],
-                "Endogenous-AbleToSell": agent.state["Endogenous"]["AbleToSell"],
+                "Endogenous-StockPrice": agent.state["endogenous"]["StockPrice"],
+                "Endogenous-StockPriceHigh": agent.state["endogenous"]["StockPriceHigh"],
+                "Endogenous-StockPriceLow": agent.state["endogenous"]["StockPriceLow"],
+                "Endogenous-TotalBalance": agent.state["endogenous"]["TotalBalance"],
+                "Endogenous-AvailableFunds": agent.state["endogenous"]["AvailableFunds"],
+                "Endogenous-Demand": agent.state["endogenous"]["Demand"],
+                "Endogenous-Supply": agent.state["endogenous"]["Supply"],
+                "Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
+                "Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
             }
         
         if not self.static:
