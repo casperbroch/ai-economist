@@ -82,7 +82,7 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
 
 
-            starting_funds = np.random.normal(20000, 5000)
+            starting_funds = 20000#np.random.normal(20000, 5000)
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
             agent.state["endogenous"]["TotalBalance"] = starting_funds
             
@@ -291,11 +291,11 @@ class StockMarketSimulation(BaseEnvironment):
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
                 # Divide by max reward to get a reward [0,1]
-                reward /= max_reward
+                # reward /= max_reward
                 # Divide reward for balance and trust equally
                 # reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
                 # Divide by number of agents
-                reward /= self.num_agents
+                reward /= 20000
 
             curr_optimization_metric[
                 agent.idx
