@@ -82,7 +82,7 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
 
 
-            starting_funds = 20000#np.random.normal(20000, 5000)
+            starting_funds = np.random.normal(20000, 5000)
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
             agent.state["endogenous"]["TotalBalance"] = starting_funds
             
