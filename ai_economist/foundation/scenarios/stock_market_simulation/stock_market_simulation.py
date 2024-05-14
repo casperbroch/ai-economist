@@ -299,7 +299,7 @@ class StockMarketSimulation(BaseEnvironment):
             
             average_total_balance /= self.num_agents
             
-            file_path = 'C:\\Users\\caspe\\Desktop\\balances.csv'
+            file_path = 'C:\\Users\\caspe\\Desktop\\volumes.csv'
             with open(file_path, mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([average_total_balance])
