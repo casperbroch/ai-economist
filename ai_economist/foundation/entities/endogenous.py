@@ -30,12 +30,6 @@ endogenous_registry = Registry(Endogenous)
 
     
 @endogenous_registry.add
-class Trust(Endogenous):
-    """The Trust level of a person"""
-
-    name = "Trust"
-    
-@endogenous_registry.add
 class TotalBalance(Endogenous):
     """The amount of money a person holds (stocks + available funds)"""
 
@@ -58,6 +52,18 @@ class StockPrice(Endogenous):
     """The price of a stock"""
 
     name = "StockPrice"
+    
+@endogenous_registry.add
+class StockPriceHigh(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPriceHigh"
+    
+@endogenous_registry.add
+class StockPriceLow(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPriceLow"
     
 @endogenous_registry.add
 class StockPriceHistory(Endogenous):
@@ -84,6 +90,12 @@ class Supply(Endogenous):
     name = "Supply"
 
 @endogenous_registry.add
+class Volumes(Endogenous):
+    """Keeps track of the volumes (demand+supply)"""
+
+    name = "Volumes"
+
+@endogenous_registry.add
 class AbleToBuy(Endogenous):
     """Determines if an agent is able to buy or not"""
 
@@ -96,10 +108,10 @@ class AbleToSell(Endogenous):
     name = "AbleToSell"
 
 @endogenous_registry.add
-class Volumes(Endogenous):
-    """Keeps track of the volumes (demand+supply)"""
+class StartingFunds(Endogenous):
+    """Used for computing the rewards"""
 
-    name = "Volumes"
+    name = "StartingFunds"
     
     
 

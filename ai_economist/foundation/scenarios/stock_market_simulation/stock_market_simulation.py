@@ -18,12 +18,10 @@ from ai_economist.foundation.base.stock_market import StockMarket
 class StockMarketSimulation(BaseEnvironment):
     name = "stock_market_simulation"
     agent_subclasses = ["BasicMobileAgent", "BasicPlanner"]
-    required_entities = ["Trust", "TotalBalance", "AvailableFunds", "StockPrice", "StocksLeft" ,"StockPriceHistory", "Demand", "Supply", "Volumes", "AbleToBuy", "AbleToSell"]
+    required_entities = ["TotalBalance", "StockPrice"]
     market = StockMarket("MSFT")
     
     step_indicator = 0
-    random_stock_crash = np.random.randint(100)
-
 
     def __init__(
         self,
@@ -31,12 +29,13 @@ class StockMarketSimulation(BaseEnvironment):
         volume_importance=0.5,
         stock_price_history_length=101,
         stock_quantity=200,
+        static = False,
         **base_env_kwargs,
     ):
         super().__init__(*base_env_args, **base_env_kwargs)
         self.num_agents = len(self.world.agents)
         self.curr_optimization_metrics = {str(a.idx): 0.0 for a in self.all_agents}
-        
+        self.static = static
         self.volume_importance = float(volume_importance)
         self.stock_price_history_length=int(stock_price_history_length)
         self.stock_quantity=int(stock_quantity)
@@ -69,29 +68,33 @@ class StockMarketSimulation(BaseEnvironment):
         self.world.clear_agent_locs()
 
         for agent in self.world.agents:
-
             # This will set all variables to 0
             agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
             
+            # Set able to buy/sell to 1 at the beginning
             agent.state["endogenous"]["AbleToBuy"] = 1
             agent.state["endogenous"]["AbleToSell"] = 1
-
-            agent.state["endogenous"]["Trust"] = 1.0
             
-            # There are 100 stocks left to begin with
+            # Set starting number of stocks left in rotation
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
 
-
+            # Set the starting funds of each agent
             starting_funds = np.random.normal(20000, 5000)
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
             agent.state["endogenous"]["TotalBalance"] = starting_funds
+            agent.state["endogenous"]["StartingFunds"] = starting_funds
             
+            # Update stock price, which at start is same as low and high
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceHigh"] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceLow"] = self.market.getprice()
             
+            # Set first item of stockprice history to current stock price
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
-            agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
-            
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
+
+            # Set first volume to 0
+            agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
             agent.state["endogenous"]["Volumes"][self.step_indicator] = 0
 
             
@@ -107,41 +110,29 @@ class StockMarketSimulation(BaseEnvironment):
         """
         self.step_indicator += 1
         
-            
-
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
         total_demand = 0
         for agent in self.world.agents:
             total_demand += agent.state["endogenous"]["Demand"]
             total_supply += agent.state["endogenous"]["Supply"]
-
-        volume = total_supply + total_demand
         
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
-        
-        #if self.step_indicator == self.random_stock_crash:
-        #    self.market.price = self.market.price / 2
-        
-        # Check to see if agents were able to trade today
-        able_to_trade = agent.state["endogenous"]["AbleToBuy"]
 
-        # Update market price within agent state
+        # Compute total volume
+        volume = total_supply + total_demand
+        
+        # Update values for agents
         for agent in self.world.agents:
+            # Update price information
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
-            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+            agent.state["endogenous"]["StockPriceHigh"] = np.amax(agent.state["endogenous"]["StockPriceHistory"])
+            agent.state["endogenous"]["StockPriceLow"] = np.amin(agent.state["endogenous"]["StockPriceHistory"][agent.state["endogenous"]["StockPriceHistory"] != 0])
             
-            # Lower or raise trust, based on if the agents were able to trade today
-            if able_to_trade == 1:
-                agent.state["endogenous"]["Trust"] += np.random.normal(0.1, 0.01) 
-                if agent.state["endogenous"]["Trust"] >= 1.0:
-                    agent.state["endogenous"]["Trust"] = 1.0
-            elif able_to_trade == 0:          
-                agent.state["endogenous"]["Trust"] -= np.random.normal(0.1, 0.01) 
-                if agent.state["endogenous"]["Trust"] <= 0.0:
-                    agent.state["endogenous"]["Trust"] = 0.0
+            # Update volume information
+            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
             
         
 
@@ -163,35 +154,42 @@ class StockMarketSimulation(BaseEnvironment):
         The planner also receives spatial observations (again, depending on the env
         config) as well as the inventory of each of the mobile agents.
         """
+        
+        # OBSERVATIONS FOR AGENTS
         obs_dict = dict()
         for agent in self.world.agents:
-            obs_dict[str(agent.idx)] = {
-                "Endogenous-" + k: v for k, v in agent.endogenous.items() if (k != "Volumes" or k != "StocksLeft" )
+            
+            obs_dict[agent.idx] = {
+                "Endogenous-StockPrice": agent.state["Endogenous"]["StockPrice"],
+                "Endogenous-StockPriceHigh": agent.state["Endogenous"]["StockPriceHigh"],
+                "Endogenous-StockPriceLow": agent.state["Endogenous"]["StockPriceLow"],
+                "Endogenous-TotalBalance": agent.state["Endogenous"]["TotalBalance"],
+                "Endogenous-AvailableFunds": agent.state["Endogenous"]["AvailableFunds"],
+                "Endogenous-Demand": agent.state["Endogenous"]["Demand"],
+                "Endogenous-Supply": agent.state["Endogenous"]["Supply"],
+                "Endogenous-AbleToBuy": agent.state["Endogenous"]["AbleToBuy"],
+                "Endogenous-AbleToSell": agent.state["Endogenous"]["AbleToSell"],
             }
         
-        
-        avg_balance = 0.0
-        avg_trust = 0.0
-        for agent in self.world.agents:
-            avg_balance += agent.state["endogenous"]["TotalBalance"]
-            avg_trust += agent.state["endogenous"]["Trust"]
+        if not self.static:
+            # OBSERVATIONS FOR PLANNER 
+            avg_balance = 0.0
+            for agent in self.world.agents:
+                avg_balance += agent.state["endogenous"]["TotalBalance"]
+            
+            avg_balance = avg_balance / self.num_agents
+            avg_trust = avg_trust / self.num_agents
+            abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
+            prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
+            volumes = self.world.agents[0].state["endogenous"]["Volumes"]
 
-        
-        avg_balance = avg_balance / self.num_agents
-        avg_trust = avg_trust / self.num_agents
-        abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
-        prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
-        volumes = self.world.agents[0].state["endogenous"]["Volumes"]
-
-
-        obs_dict[self.world.planner.idx] = {
-            "avg_balance": avg_balance,
-            "avg_trust": avg_trust,
-            "abl_trade": abl_trade,
-            "prices": prices,
-            "volumes": volumes,
-        }
-        
+            obs_dict[self.world.planner.idx] = {
+                "avg_balance": avg_balance,
+                "avg_trust": avg_trust,
+                "abl_trade": abl_trade,
+                "prices": prices,
+                "volumes": volumes,
+            }
 
         return obs_dict
 
@@ -245,17 +243,18 @@ class StockMarketSimulation(BaseEnvironment):
         """
         metrics = dict()
         
-        avg_balance = 0.0
-        avg_trust = 0.0
-        for agent in self.world.agents:
-            avg_balance += agent.state["endogenous"]["TotalBalance"]
-            avg_trust += agent.state["endogenous"]["Trust"]
+        if not self.static:
+            avg_balance = 0.0
+            avg_trust = 0.0
+            for agent in self.world.agents:
+                avg_balance += agent.state["endogenous"]["TotalBalance"]
+                avg_trust += agent.state["endogenous"]["Trust"]
 
-        
-        metrics["system/avg_balance"] = avg_balance
-        metrics["system/avg_trust"] = avg_trust
+            
+            metrics["system/avg_balance"] = avg_balance
+            metrics["system/avg_trust"] = avg_trust
 
-        metrics["util/p"] = self.curr_optimization_metrics[self.world.planner.idx]
+            metrics["util/p"] = self.curr_optimization_metrics[self.world.planner.idx]
 
         return metrics
 
@@ -270,34 +269,8 @@ class StockMarketSimulation(BaseEnvironment):
         """
         curr_optimization_metric = {}
 
-        # Find the largest balance among agents and compute the today's volume
-        max_balance = 0.0
-        avg_trust = 0.0
         for agent in agents:
-            if agent.state["endogenous"]["TotalBalance"] > max_balance:
-                max_balance = agent.state["endogenous"]["TotalBalance"]
-                avg_trust += agent.state["endogenous"]["Trust"]
-        
-        avg_trust = avg_trust / self.num_agents
-
-        max_reward = 0
-        for agent in agents:
-            curr_reward = agent.state["endogenous"]["TotalBalance"]
-            if curr_reward > max_reward:
-                max_reward = curr_reward
-        # Optimization metric for agents:
-        for agent in agents:
-            reward = agent.state["endogenous"]["TotalBalance"]
-            # scale rewards from 0 to 1, otherwise planner doesn't learn
-            if max_reward > 0:
-                # Divide by max reward to get a reward [0,1]
-                #reward /= max_reward
-                # Divide reward for balance and trust equally
-                # reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
-                # Divide by number of agents
-                #reward /= self.num_agents
-                reward /= 20000
-                pass
+            reward = agent.state["endogenous"]["TotalBalance"] / agent.state["endogenous"]["StartingFunds"]
 
             curr_optimization_metric[
                 agent.idx
@@ -306,22 +279,7 @@ class StockMarketSimulation(BaseEnvironment):
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
-        ] = 1.0#avg_trust#rewards.planner_reward_total(
-                # just getting an agent since abletobuy and abletosell is the same for all agents
-                # only for testing purposes right now
-            #    self.world.agents[0]
-            #)
-                
-        for agent in agents:
-            if curr_optimization_metric[agent.idx] > 1.0 or curr_optimization_metric[agent.idx] < 0:
-                #print("Problem!!, lower or bigger than 0 for agent")
-                #print("agent reward: ",curr_optimization_metric[agent.idx])
-                pass
-                
-        if curr_optimization_metric[self.world.planner.idx] > 1.0 or curr_optimization_metric[self.world.planner.idx] < 0:
-                #print("Problem !!, lower or bigger than 0 for planner")
-                #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
-            pass
+        ] = 1.0
                 
                 
         return curr_optimization_metric
