@@ -302,6 +302,7 @@ class StockMarketSimulation(BaseEnvironment):
             with open('C:/Users/caspe/Desktop/balances.csv', 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([average_total_balance])
+                print(average_total_balance)
             
                 
                 
