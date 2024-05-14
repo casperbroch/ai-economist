@@ -17,8 +17,8 @@ class ExecCircuitBreaker(BaseComponent):
         self.no_actions = 2
         self.policy_interval = 10
         
-        self.default_planner_action_mask = [1 for _ in range(self.green_score_importance)]
-        self.no_op_planner_action_mask = [0 for _ in range(self.green_score_importance)]
+        self.default_planner_action_mask = [1 for _ in range(self.no_actions)]
+        self.no_op_planner_action_mask = [0 for _ in range(self.no_actions)]
 
     def get_additional_state_fields(self, agent_cls_name):
         return {}
