@@ -15,6 +15,10 @@ class ExecCircuitBreaker(BaseComponent):
         super().__init__(*base_component_args, **base_component_kwargs)
 
         self.no_actions = 2
+        self.policy_interval = 10
+        
+        self.default_planner_action_mask = [1 for _ in range(self.green_score_importance)]
+        self.no_op_planner_action_mask = [0 for _ in range(self.green_score_importance)]
 
     def get_additional_state_fields(self, agent_cls_name):
         return {}
@@ -29,7 +33,10 @@ class ExecCircuitBreaker(BaseComponent):
 
     def generate_masks(self, completions=0):
         masks = {}
-        masks[self.world.planner.idx] = np.ones(int(self.no_actions))
+        if self.world.timestep % self.policy_interval == 0:
+            masks[self.world.planner.idx] = self.default_planner_action_mask
+        else:
+            masks[self.world.planner.idx] = self.no_op_planner_action_mask
         return masks
 
     def component_step(self):
@@ -41,16 +48,18 @@ class ExecCircuitBreaker(BaseComponent):
             
             # Let the market run its course and don't block trading
             if planner_action == 1:
-                for agent in self.world.get_random_order_agents():
-                    agent.state["endogenous"]["AbleToBuy"] = 1
-                    agent.state["endogenous"]["AbleToSell"] = 1
+                if (self.world.timestep - 1) % self.policy_interval == 0:
+                    for agent in self.world.get_random_order_agents():
+                        agent.state["endogenous"]["AbleToBuy"] = 1
+                        agent.state["endogenous"]["AbleToSell"] = 1
                     
 
             # Execute circuit breaker and block trading
             if planner_action == 2:
-                for agent in self.world.get_random_order_agents():
-                    agent.state["endogenous"]["AbleToBuy"] = 0
-                    agent.state["endogenous"]["AbleToSell"] = 0
+                if (self.world.timestep - 1) % self.policy_interval == 0:
+                    for agent in self.world.get_random_order_agents():
+                        agent.state["endogenous"]["AbleToBuy"] = 0
+                        agent.state["endogenous"]["AbleToSell"] = 0
                     
          
         else: 
