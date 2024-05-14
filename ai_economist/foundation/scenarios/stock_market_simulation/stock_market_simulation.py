@@ -295,7 +295,8 @@ class StockMarketSimulation(BaseEnvironment):
                 # Divide reward for balance and trust equally
                 # reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
                 # Divide by number of agents
-                reward /= 20000
+                # reward /= 20000
+                pass
 
             curr_optimization_metric[
                 agent.idx
