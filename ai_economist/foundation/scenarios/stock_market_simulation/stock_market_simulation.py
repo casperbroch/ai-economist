@@ -79,7 +79,7 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
 
             # Set the starting funds of each agent
-            starting_funds = np.random.normal(20000, 5000)
+            starting_funds = np.random.normal(20000, 500)
             agent.state["endogenous"]["AvailableFunds"] = starting_funds
             agent.state["endogenous"]["TotalBalance"] = starting_funds
             agent.state["endogenous"]["StartingFunds"] = starting_funds
@@ -118,7 +118,8 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        #self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        self.market.nextsteprandom()
 
         # Compute total volume
         volume = total_supply + total_demand
@@ -160,6 +161,7 @@ class StockMarketSimulation(BaseEnvironment):
         for agent in self.world.agents:
             
             obs_dict[agent.idx] = {
+                "Endogenous-StockPriceHistory": agent.state["endogenous"]["StockPriceHistory"],
                 "Endogenous-StockPrice": agent.state["endogenous"]["StockPrice"],
                 "Endogenous-StockPriceHigh": agent.state["endogenous"]["StockPriceHigh"],
                 "Endogenous-StockPriceLow": agent.state["endogenous"]["StockPriceLow"],
@@ -167,8 +169,8 @@ class StockMarketSimulation(BaseEnvironment):
                 "Endogenous-AvailableFunds": agent.state["endogenous"]["AvailableFunds"],
                 "Endogenous-Demand": agent.state["endogenous"]["Demand"],
                 "Endogenous-Supply": agent.state["endogenous"]["Supply"],
-                "Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
-                "Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
+                #"Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
+                #"Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
             }
         
         if not self.static:
