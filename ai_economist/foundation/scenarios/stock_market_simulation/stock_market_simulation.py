@@ -320,12 +320,6 @@ class StockMarketSimulation(BaseEnvironment):
                 #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
             pass
                 
-        if self.step_indicator == 100:
-            total = 0
-            for agent in agents:
-                total += agent.state["endogenous"]["TotalBalance"]
-            
-            print(total)
                 
         return curr_optimization_metric
     
