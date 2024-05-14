@@ -254,14 +254,10 @@ class StockMarketSimulation(BaseEnvironment):
         
         if not self.static:
             avg_balance = 0.0
-            avg_trust = 0.0
             for agent in self.world.agents:
                 avg_balance += agent.state["endogenous"]["TotalBalance"]
-                avg_trust += agent.state["endogenous"]["Trust"]
 
-            
             metrics["system/avg_balance"] = avg_balance
-            metrics["system/avg_trust"] = avg_trust
 
             metrics["util/p"] = self.curr_optimization_metrics[self.world.planner.idx]
 
