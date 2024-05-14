@@ -175,8 +175,8 @@ class StockMarketSimulation(BaseEnvironment):
                 "Endogenous-AvailableFunds": agent.state["endogenous"]["AvailableFunds"],
                 "Endogenous-Demand": agent.state["endogenous"]["Demand"],
                 "Endogenous-Supply": agent.state["endogenous"]["Supply"],
-                "Endogenous-TotalDemand": agent.state["endogenous"]["TotalDemand"],
-                "Endogenous-TotalSupply": agent.state["endogenous"]["TotalSupply"],
+                "Endogenous-TotalDemand": total_demand,
+                "Endogenous-TotalSupply": total_supply,
                 #"Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
                 #"Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
             }
