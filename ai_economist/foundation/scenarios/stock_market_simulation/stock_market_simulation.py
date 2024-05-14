@@ -106,6 +106,7 @@ class StockMarketSimulation(BaseEnvironment):
         component step and before generating observations, rewards, etc.
         """
         self.step_indicator += 1
+        
             
 
         # Get total total supply/demand in order to determine stock price
@@ -303,7 +304,7 @@ class StockMarketSimulation(BaseEnvironment):
         # Optimization metric for the planner:
         curr_optimization_metric[
             self.world.planner.idx
-        ] = avg_trust#rewards.planner_reward_total(
+        ] = 1.0#avg_trust#rewards.planner_reward_total(
                 # just getting an agent since abletobuy and abletosell is the same for all agents
                 # only for testing purposes right now
             #    self.world.agents[0]
@@ -318,6 +319,13 @@ class StockMarketSimulation(BaseEnvironment):
                 #print("Problem !!, lower or bigger than 0 for planner")
                 #print("planner reward: ",curr_optimization_metric[self.world.planner.idx])
             pass
+                
+        if self.step_indicator == 100:
+            total = 0
+            for agent in agents:
+                total += agent.state["endogenous"]["totalbalance"]
+            
+            print(total)
                 
         return curr_optimization_metric
     
