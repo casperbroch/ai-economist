@@ -323,7 +323,7 @@ class StockMarketSimulation(BaseEnvironment):
         if self.step_indicator == 100:
             total = 0
             for agent in agents:
-                total += agent.state["endogenous"]["totalbalance"]
+                total += agent.state["endogenous"]["TotalBalance"]
             
             print(total)
                 
