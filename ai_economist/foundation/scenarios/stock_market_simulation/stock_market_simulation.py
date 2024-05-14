@@ -291,10 +291,11 @@ class StockMarketSimulation(BaseEnvironment):
             # scale rewards from 0 to 1, otherwise planner doesn't learn
             if max_reward > 0:
                 # Divide by max reward to get a reward [0,1]
-                # reward /= max_reward
+                reward /= max_reward
                 # Divide reward for balance and trust equally
                 # reward = reward*0.5 + 0.5*agent.state["endogenous"]["Trust"]
                 # Divide by number of agents
+                reward /= self.num_agents
                 # reward /= 20000
                 pass
 
