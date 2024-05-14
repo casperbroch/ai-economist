@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import random
 import os
+import csv
 
 from ai_economist.foundation.base.base_env import BaseEnvironment, scenario_registry
 from ai_economist.foundation.scenarios.utils import rewards, social_metrics
@@ -290,6 +291,18 @@ class StockMarketSimulation(BaseEnvironment):
         curr_optimization_metric[
             self.world.planner.idx
         ] = 1.0
+        
+        if self.world.timestep == 100:
+            average_total_balance = 0
+            for agent in agents:
+                average_total_balance += agent.state["endogenous"]["TotalBalance"]
+            
+            average_total_balance /= self.num_agents
+            
+            with open('C:/Users/caspe/Desktop', 'a', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow([average_total_balance])
+            
                 
                 
         return curr_optimization_metric
