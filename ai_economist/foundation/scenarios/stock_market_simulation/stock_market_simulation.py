@@ -27,7 +27,7 @@ class StockMarketSimulation(BaseEnvironment):
     def __init__(
         self,
         *base_env_args,
-        volume_importance=0.5,
+        liq_importance=0.5,
         stock_price_history_length=101,
         stock_quantity=200,
         static = False,
@@ -37,7 +37,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.num_agents = len(self.world.agents)
         self.curr_optimization_metrics = {str(a.idx): 0.0 for a in self.all_agents}
         self.static = static
-        self.volume_importance = float(volume_importance)
+        self.liq_importance = float(liq_importance)
         self.stock_price_history_length=int(stock_price_history_length)
         self.stock_quantity=int(stock_quantity)
 
@@ -282,11 +282,12 @@ class StockMarketSimulation(BaseEnvironment):
             ] = reward
             
         # Optimization metric for the planner:
-        
-        able_to_buy = agent.state["endogenous"]["AbleToBuy"]
+        volumes = agents[0].state["endogenous"]["Volumes"]
+        prices = agents[0].state["endogenous"]["Volumes"]
+
         curr_optimization_metric[
             self.world.planner.idx
-        ] = able_to_buy
+        ] = rewards.planner_reward_total(self.step_indicator, volumes, prices, self.liq_importance)
         
                 
         return curr_optimization_metric
