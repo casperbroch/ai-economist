@@ -140,7 +140,7 @@ class StockMarketSimulation(BaseEnvironment):
         
         # Next, we check if a crash is current happening
         if self.crash == True:
-            self.intensity_crash = self.instensity_crash * np.random.uniform(0.1, 0.3)
+            self.intensity_crash = self.intensity_crash * np.random.uniform(0.1, 0.3)
             self.market.price = self.market.getprice() * self.intensity_crash
             
             self.duration_crash -= 1
