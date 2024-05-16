@@ -129,18 +129,19 @@ class StockMarketSimulation(BaseEnvironment):
         """
         self.step_indicator += 1
         
-        # Before anything is done, we check if a crash is starting
-        if self.step_indicator == self.random_stock_crash_start:
-            self.crash = True
+                
+        # Next, we check if a crash is current happening
+        if self.crash == True:
+            self.intensity_crash = self.intensity_crash * np.random.uniform(0.1, 0.3)
             self.market.price = self.market.getprice() * self.intensity_crash
             
             self.duration_crash -= 1
             if self.duration_crash == 0:
                 self.crash = False
-        
-        # Next, we check if a crash is current happening
-        if self.crash == True:
-            self.intensity_crash = self.intensity_crash * np.random.uniform(0.1, 0.3)
+                
+        # Before anything is done, we check if a crash is starting
+        if self.step_indicator == self.random_stock_crash_start:
+            self.crash = True
             self.market.price = self.market.getprice() * self.intensity_crash
             
             self.duration_crash -= 1
