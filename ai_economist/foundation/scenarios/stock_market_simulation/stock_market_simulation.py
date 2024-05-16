@@ -23,6 +23,12 @@ class StockMarketSimulation(BaseEnvironment):
     market = StockMarket("MSFT")
     
     step_indicator = 0
+    
+    random_stock_crash_start = 0
+    intensity_crash = 0
+    duration_crash = 0
+    crash = False
+    
 
     def __init__(
         self,
@@ -61,7 +67,19 @@ class StockMarketSimulation(BaseEnvironment):
         Here, empty inventories, give mobile agents any starting coin, and place them
         in random accesible locations to start.
         """
-        self.random_stock_crash = np.random.randint(100)
+        # At the start there is no crash happening
+        self.crash = False
+        
+        # Set time step of start of crash
+        self.random_stock_crash_start = np.random.randint(90)
+        
+        # Set initial crash intensity (between 10% and 30%)
+        self.intensity_crash = np.random.uniform(0.3, 0.9)
+        
+        # Set duration of crash (between 1 and 10 days)
+        self.duration_crash = np.random.randint(1, 10)
+
+        
         self.step_indicator = 0
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
@@ -111,6 +129,25 @@ class StockMarketSimulation(BaseEnvironment):
         """
         self.step_indicator += 1
         
+        # Before anything is done, we check if a crash is starting
+        if self.step_indicator == self.random_stock_crash_start:
+            self.crash = True
+            self.market.price = self.market.getprice() * self.intensity_crash
+            
+            self.duration_crash -= 1
+            if self.duration_crash == 0:
+                self.crash = False
+        
+        # Next, we check if a crash is current happening
+        if self.crash == True:
+            self.intensity_crash *= np.random.uniform(0.3, 0.7)
+            self.market.price = self.market.getprice() * self.intensity_crash
+            
+            self.duration_crash -= 1
+            if self.duration_crash == 0:
+                self.crash = False
+
+        
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
         total_demand = 0
@@ -135,7 +172,7 @@ class StockMarketSimulation(BaseEnvironment):
             
             # Update volume information
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
-            
+                    
         
 
     def generate_observations(self):
