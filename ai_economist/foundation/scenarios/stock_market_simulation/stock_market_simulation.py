@@ -134,8 +134,6 @@ class StockMarketSimulation(BaseEnvironment):
         if self.crash == True:
             self.intensity_crash = self.intensity_crash * np.random.uniform(0.5, 1.0)
             self.market.price = self.market.getprice() - (self.market.getprice() * self.intensity_crash)
-            print("consecutive crash", self.intensity_crash)
-            print(self.market.price)
 
             self.duration_crash -= 1
             if self.duration_crash == 0:
@@ -145,8 +143,6 @@ class StockMarketSimulation(BaseEnvironment):
         if self.step_indicator == self.random_stock_crash_start:
             self.crash = True
             self.market.price = self.market.getprice() - (self.market.getprice() * self.intensity_crash)
-            print("initial crash ", self.intensity_crash)
-            print(self.market.price)
             
             self.duration_crash -= 1
             if self.duration_crash == 0:
@@ -161,8 +157,7 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        if self.crash == False:
-            self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         #self.market.nextsteprandom()
 
         # Compute total volume
