@@ -74,7 +74,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.random_stock_crash_start = np.random.randint(10, 90)
         
         # Set initial crash intensity (between 10% and 30%)
-        self.intensity_crash = np.random.uniform(0.8, 0.9)
+        self.intensity_crash = np.random.uniform(0.1, 0.3)
         
         # Set duration of crash (between 1 and 10 days)
         self.duration_crash = np.random.randint(2, 4)
@@ -132,8 +132,8 @@ class StockMarketSimulation(BaseEnvironment):
                 
         # Next, we check if a crash is current happening
         if self.crash == True:
-            self.intensity_crash = self.intensity_crash * np.random.uniform(0.3, 0.6)
-            self.market.price = self.market.getprice() * self.intensity_crash
+            self.intensity_crash = self.intensity_crash * np.random.uniform(0.5, 1.0)
+            self.market.price = self.market.getprice() - (self.market.getprice() * self.intensity_crash)
             print("consecutive crash", self.intensity_crash)
             print(self.market.price)
 
@@ -144,7 +144,7 @@ class StockMarketSimulation(BaseEnvironment):
         # Before anything is done, we check if a crash is starting
         if self.step_indicator == self.random_stock_crash_start:
             self.crash = True
-            self.market.price = self.market.getprice() * self.intensity_crash
+            self.market.price = self.market.getprice() - (self.market.getprice() * self.intensity_crash)
             print("initial crash ", self.intensity_crash)
             print(self.market.price)
             
