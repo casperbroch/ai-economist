@@ -157,7 +157,8 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        if self.crash == False:
+            self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         #self.market.nextsteprandom()
 
         # Compute total volume
