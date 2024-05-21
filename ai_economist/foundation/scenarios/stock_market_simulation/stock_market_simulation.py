@@ -74,7 +74,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.random_stock_crash_start = np.random.randint(10, 90)
         
         # Set initial crash intensity (between 10% and 30%)
-        self.intensity_crash = np.random.uniform(0.2, 0.3)
+        self.intensity_crash = np.random.uniform(0.2, 0.4)
         
         # Set duration of crash (between 1 and 10 days)
         self.duration_crash = np.random.randint(3, 8)
@@ -132,7 +132,7 @@ class StockMarketSimulation(BaseEnvironment):
                 
         # We check if a crash is currently happening
         if self.crash == True:
-            crash_percentage = self.intensity_crash * np.random.uniform(0.3, 0.7)
+            crash_percentage = self.intensity_crash * np.random.uniform(0.4, 0.8)
             self.market.price = self.market.getprice() - (self.market.getprice() * crash_percentage)
 
             self.duration_crash -= 1
