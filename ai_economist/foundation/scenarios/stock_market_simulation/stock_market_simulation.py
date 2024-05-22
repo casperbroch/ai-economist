@@ -132,9 +132,10 @@ class StockMarketSimulation(BaseEnvironment):
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
         
         # We check if a crash is currently happening
-        if self.crash == True and able_to_trade == 1:
-            crash_percentage = self.intensity_crash * np.random.uniform(0.3, 0.7)
-            self.market.price = self.market.getprice() - (self.market.getprice() * crash_percentage)
+        if self.crash == True:
+            if able_to_trade == 1:        
+                crash_percentage = self.intensity_crash * np.random.uniform(0.3, 0.7)
+                self.market.price = self.market.getprice() - (self.market.getprice() * crash_percentage)
 
             self.duration_crash -= 1
             if self.duration_crash == 0:
