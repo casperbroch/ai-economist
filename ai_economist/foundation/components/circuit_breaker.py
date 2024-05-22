@@ -15,7 +15,7 @@ class ExecCircuitBreaker(BaseComponent):
         super().__init__(*base_component_args, **base_component_kwargs)
 
         self.no_actions = 2
-        self.policy_interval = 1
+        self.policy_interval = 10
         
         self.default_planner_action_mask = [1 for _ in range(self.no_actions)]
         self.no_op_planner_action_mask = [0 for _ in range(self.no_actions)]
