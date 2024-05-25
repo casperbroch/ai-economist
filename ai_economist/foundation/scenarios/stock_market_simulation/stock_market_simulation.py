@@ -135,6 +135,9 @@ class StockMarketSimulation(BaseEnvironment):
         
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
         
+        if self.crash == True and able_to_trade == 0:
+            print("we are unable to trade and crash happening, price is now", self.market.getprice())
+        
         # We check if a crash is currently happening
         if self.crash == True:
             if able_to_trade == 1:        
@@ -164,6 +167,9 @@ class StockMarketSimulation(BaseEnvironment):
         
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        
+        if self.crash == True and able_to_trade == 0:
+            print("after price update ....", self.market.getprice())
         #self.market.nextsteprandom()
 
         # Compute total volume
