@@ -131,7 +131,6 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
-        self.step_indicator += 1
         
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
         
@@ -178,6 +177,9 @@ class StockMarketSimulation(BaseEnvironment):
             
             # Update volume information
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+            
+        self.step_indicator += 1
+
                     
         
 
