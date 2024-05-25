@@ -36,6 +36,8 @@ class StockMarketSimulation(BaseEnvironment):
         liq_importance=0.5,
         stock_price_history_length=101,
         stock_quantity=200,
+        base_volume=30,
+        base_std=5,
         static = False,
         **base_env_kwargs,
     ):
@@ -46,6 +48,8 @@ class StockMarketSimulation(BaseEnvironment):
         self.liq_importance = float(liq_importance)
         self.stock_price_history_length=int(stock_price_history_length)
         self.stock_quantity=int(stock_quantity)
+        self.base_std=float(base_std)
+        self.base_volume=float(base_volume)
 
 
 
@@ -233,8 +237,8 @@ class StockMarketSimulation(BaseEnvironment):
             prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
             
-            liq = rewards.planner_reward_liq(self.step_indicator, volumes, 10)
-            stab = rewards.planner_reward_stab(self.step_indicator, prices, 10)
+            liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
+            stab = rewards.planner_reward_stab(self.step_indicator, prices, 5, self.base_std)
 
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,
@@ -328,7 +332,7 @@ class StockMarketSimulation(BaseEnvironment):
 
         curr_optimization_metric[
             self.world.planner.idx
-        ] = rewards.planner_reward_total(self.step_indicator, volumes, prices, self.liq_importance)
+        ] = rewards.planner_reward_total(self.step_indicator, volumes, prices, self.base_volume, self.base_std, self.liq_importance)
         
                 
         return curr_optimization_metric

@@ -140,43 +140,38 @@ def agent_reward_total(balance, max_balance):
     return reward 
 
 
-def planner_reward_total(timestep, volumes, prices, liq_importance=0.5):
-    liq = planner_reward_liq(timestep, volumes, 10)
-    stab = planner_reward_stab(timestep, prices, 10)
+def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_importance=0.5):
+    liq = planner_reward_liq(timestep, volumes, base_volume)
+    stab = planner_reward_stab(timestep, prices, 5, base_std)
     #print("liq score ",liq)
     #print("stab score ",stab)
     
     reward = (liq_importance * liq) - ((1-liq_importance) * stab)
     return reward
 
-def planner_reward_liq(timestep, volumes, window_size):
-    if timestep < window_size:
-        volumes_window = volumes[:timestep+1]
-    else:
-        volumes_window = volumes[timestep - window_size: timestep+1]
+def planner_reward_liq(timestep, volumes, base_volume=30):
+    max_volume = max(volumes)
+    
+    if max_volume < base_volume:
+        max_volume = base_volume
         
-    mean_volume = sum(volumes_window) / len(volumes_window)
-    if mean_volume > 0:
-        curr_volume = volumes[timestep]
-        diff = curr_volume / mean_volume
-        return diff
-    else:
-        return 0.0
+    curr_volume = volumes[timestep]
+    return curr_volume / max_volume
     
 
-def planner_reward_stab(timestep, prices, window_size):
-    if timestep < window_size:
-        prices_window = prices[:timestep+1]
-    else:
-        prices_window = prices[timestep - window_size: timestep+1]
-    
-    differences = [prices_window[i] - prices_window[i-1] for i in range(1, len(prices_window))]
-    price_decreases = [abs(diff) for diff in differences if diff < 0]
-    
-    if len(price_decreases) > 0:
-        mean_decrease = sum(price_decreases) / len(prices_window)
-        mean_decrease /= 6
-        return mean_decrease
-    else:
+def planner_reward_stab(timestep, prices, window_size, base_std=5):
+    if timestep < window_size - 1:
         return 0.0
+    
+    rolling_stds = [np.std(prices[i:i+window_size]) for i in range(timestep - window_size + 2)]
+    current_std = rolling_stds[-1]
+    
+    max_std = max(rolling_stds)
+    
+    if max_std < base_std:
+        max_std = base_std
+    
+    normalized_std = current_std / max_std if max_std != 0 else 0  # Avoid division by zero
+    
+    return normalized_std
 
