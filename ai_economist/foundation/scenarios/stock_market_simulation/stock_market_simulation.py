@@ -84,7 +84,6 @@ class StockMarketSimulation(BaseEnvironment):
         self.duration_crash = 8#np.random.randint(4, 10)
 
         
-        self.step_indicator = 0
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
 
@@ -114,11 +113,11 @@ class StockMarketSimulation(BaseEnvironment):
             
             # Set first item of stockprice history to current stock price
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
-            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceHistory"][self.world.timestep] = self.market.getprice()
 
             # Set first volume to 0
             agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
-            agent.state["endogenous"]["Volumes"][self.step_indicator] = 0
+            agent.state["endogenous"]["Volumes"][self.world.timestep] = 0
 
             
 
@@ -131,7 +130,7 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
-        self.step_indicator += 1
+        self.world.timestep += 1
         
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
         
@@ -146,7 +145,7 @@ class StockMarketSimulation(BaseEnvironment):
                 self.crash = False
                 
         # We check if a crash is starting
-        if self.step_indicator == self.random_stock_crash_start:
+        if self.world.timestep == self.random_stock_crash_start:
             self.crash = True
             self.market.price = self.market.getprice() - (self.market.getprice() * self.intensity_crash)
             
@@ -172,12 +171,12 @@ class StockMarketSimulation(BaseEnvironment):
         for agent in self.world.agents:
             # Update price information
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
-            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
+            agent.state["endogenous"]["StockPriceHistory"][self.world.timestep] = self.market.getprice()
             agent.state["endogenous"]["StockPriceHigh"] = np.amax(agent.state["endogenous"]["StockPriceHistory"])
             agent.state["endogenous"]["StockPriceLow"] = np.amin(agent.state["endogenous"]["StockPriceHistory"][agent.state["endogenous"]["StockPriceHistory"] != 0])
             
             # Update volume information
-            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+            agent.state["endogenous"]["Volumes"][self.world.timestep] = volume
                     
         
 
@@ -236,8 +235,8 @@ class StockMarketSimulation(BaseEnvironment):
             prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
             
-            liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
-            stab = rewards.planner_reward_stab(self.step_indicator, prices, 5, self.base_std)
+            liq = rewards.planner_reward_liq(self.world.timestep, volumes, self.base_volume)
+            stab = rewards.planner_reward_stab(self.world.timestep, prices, 5, self.base_std)
 
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,
@@ -331,7 +330,7 @@ class StockMarketSimulation(BaseEnvironment):
 
         curr_optimization_metric[
             self.world.planner.idx
-        ] = rewards.planner_reward_total(self.step_indicator, volumes, prices, self.base_volume, self.base_std, self.liq_importance)
+        ] = rewards.planner_reward_total(self.world.timestep, volumes, prices, self.base_volume, self.base_std, self.liq_importance)
         
                 
         return curr_optimization_metric
