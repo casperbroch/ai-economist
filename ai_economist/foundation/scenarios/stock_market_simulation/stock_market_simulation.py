@@ -165,10 +165,6 @@ class StockMarketSimulation(BaseEnvironment):
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
-        if self.crash == True and able_to_trade == 0:
-            print("after price update ....", self.market.getprice())
-        #self.market.nextsteprandom()
-
         # Compute total volume
         volume = total_supply + total_demand
         
