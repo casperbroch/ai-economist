@@ -224,20 +224,21 @@ class StockMarketSimulation(BaseEnvironment):
         
         if not self.static:
             # OBSERVATIONS FOR PLANNER 
-            avg_balance = 0.0
-            for agent in self.world.agents:
-                avg_balance += agent.state["endogenous"]["TotalBalance"]
+            #avg_balance = 0.0
+            #for agent in self.world.agents:
+            #    avg_balance += agent.state["endogenous"]["TotalBalance"]
             
-            avg_balance = avg_balance / self.num_agents
-            abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
+            #avg_balance = avg_balance / self.num_agents
+            #abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
             prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
+            
+            liq = rewards.planner_reward_liq(self.step_indicator, volumes, 10)
+            stab = rewards.planner_reward_stab(self.step_indicator, prices, 10)
 
             obs_dict[self.world.planner.idx] = {
-                "avg_balance": avg_balance,
-                "abl_trade": abl_trade,
-                "prices": prices,
-                "volumes": volumes,
+                "liquidity": liq,
+                "stability": stab,
             }
 
         return obs_dict
