@@ -84,7 +84,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.duration_crash = 8#np.random.randint(4, 10)
 
         
-        self.step_indicator = -1
+        self.step_indicator = 0
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
 
