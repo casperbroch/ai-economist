@@ -115,6 +115,9 @@ class StockMarketSimulation(BaseEnvironment):
             # Set first item of stockprice history to current stock price
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
             agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
+            
+            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
+            agent.state["endogenous"]["Volumes"][self.step_indicator] = 0.0
 
             
 
@@ -160,7 +163,8 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        if able_to_trade == 1:
+            self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
         # Compute total volume
         volume = total_supply + total_demand
