@@ -34,7 +34,7 @@ class StockMarketSimulation(BaseEnvironment):
         self,
         *base_env_args,
         liq_importance=0.5,
-        stock_price_history_length=101,
+        stock_price_history_length=100,
         stock_quantity=200,
         base_volume=30,
         base_std=5,
@@ -84,7 +84,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.duration_crash = 8#np.random.randint(4, 10)
 
         
-        self.step_indicator = 0
+        self.step_indicator = -1
         self.market = StockMarket("MSFT")
         self.market.simulate(1)
 
@@ -114,11 +114,7 @@ class StockMarketSimulation(BaseEnvironment):
             
             # Set first item of stockprice history to current stock price
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
-            agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
-
-            # Set first volume to 0
             agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
-            agent.state["endogenous"]["Volumes"][self.step_indicator] = 0
 
             
 
@@ -131,6 +127,8 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
+        
+        self.step_indicator += 1
         
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
         
@@ -178,7 +176,6 @@ class StockMarketSimulation(BaseEnvironment):
             # Update volume information
             agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
             
-        self.step_indicator += 1
 
                     
         
