@@ -163,8 +163,7 @@ class StockMarketSimulation(BaseEnvironment):
             total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
-        if able_to_trade == 1:
-            self.market.nextstep(total_supply, total_demand, self.stock_quantity)
+        self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
         # Compute total volume
         volume = total_supply + total_demand
