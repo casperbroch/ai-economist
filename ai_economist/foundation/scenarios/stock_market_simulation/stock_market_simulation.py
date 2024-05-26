@@ -130,6 +130,24 @@ class StockMarketSimulation(BaseEnvironment):
         This gets called in the 'step' method (of base_env) after going through each
         component step and before generating observations, rewards, etc.
         """
+        # ! This is called AFTER the actions are made, so first we update the volumes at this timestep.
+
+        # Get total total supply/demand in order to determine stock price
+        total_supply = 0
+        total_demand = 0
+        for agent in self.world.agents:
+            total_demand += agent.state["endogenous"]["Demand"]
+            total_supply += agent.state["endogenous"]["Supply"]
+            
+        # Compute total volume
+        volume = total_supply + total_demand
+        
+        for agent in self.world.agents:
+            # Update volume information
+            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+        
+        
+        # ! Now we enter the NEXT day and update the prices. 
         
         self.step_indicator += 1
         
@@ -153,20 +171,9 @@ class StockMarketSimulation(BaseEnvironment):
             self.duration_crash -= 1
             if self.duration_crash == 0:
                 self.crash = False
-
-        
-        # Get total total supply/demand in order to determine stock price
-        total_supply = 0
-        total_demand = 0
-        for agent in self.world.agents:
-            total_demand += agent.state["endogenous"]["Demand"]
-            total_supply += agent.state["endogenous"]["Supply"]
         
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
-        
-        # Compute total volume
-        volume = total_supply + total_demand
         
         # Update values for agents
         for agent in self.world.agents:
@@ -175,9 +182,7 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             agent.state["endogenous"]["StockPriceHigh"] = np.amax(agent.state["endogenous"]["StockPriceHistory"])
             agent.state["endogenous"]["StockPriceLow"] = np.amin(agent.state["endogenous"]["StockPriceHistory"][agent.state["endogenous"]["StockPriceHistory"] != 0])
-            
-            # Update volume information
-            agent.state["endogenous"]["Volumes"][self.step_indicator] = volume
+
             
 
                     
