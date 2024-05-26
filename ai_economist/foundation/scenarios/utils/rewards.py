@@ -156,7 +156,11 @@ def planner_reward_liq(timestep, volumes, base_volume=30):
         max_volume = base_volume
         
     curr_volume = volumes[timestep-1]
-    return curr_volume / max_volume
+    
+    if curr_volume == 0.0:
+        return 0.0
+    else:
+        return curr_volume / max_volume
     
 
 def planner_reward_stab(timestep, prices, window_size, base_std=5):
