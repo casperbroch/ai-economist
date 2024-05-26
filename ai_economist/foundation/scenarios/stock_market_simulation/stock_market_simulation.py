@@ -71,7 +71,6 @@ class StockMarketSimulation(BaseEnvironment):
         Here, empty inventories, give mobile agents any starting coin, and place them
         in random accesible locations to start.
         """
-        print("method init ", self.world.timestep)
         # At the start there is no crash happening
         self.crash = False
         
@@ -130,7 +129,6 @@ class StockMarketSimulation(BaseEnvironment):
         component step and before generating observations, rewards, etc.
         """
         # ! This is called AFTER the actions are made, so first we update the volumes at this timestep.
-        print("method step ", self.world.timestep)
 
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
@@ -245,7 +243,6 @@ class StockMarketSimulation(BaseEnvironment):
             liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
             stab = rewards.planner_reward_stab(self.step_indicator, prices, 2, self.base_std)
 
-            print("method observations ", self.world.timestep)
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,
                 "stability": stab,
@@ -336,7 +333,6 @@ class StockMarketSimulation(BaseEnvironment):
         volumes = agents[0].state["endogenous"]["Volumes"]
         prices = agents[0].state["endogenous"]["Volumes"]
         
-        print("method rewareds ", self.world.timestep)
 
         curr_optimization_metric[
             self.world.planner.idx
