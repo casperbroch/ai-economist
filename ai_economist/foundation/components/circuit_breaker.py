@@ -41,9 +41,7 @@ class ExecCircuitBreaker(BaseComponent):
 
     def component_step(self):
         planner_action = self.world.planner.get_component_action(self.name)
-        if planner_action == 0:
-            print("stopped market!! at !!", self.world.timestep)
- 
+        
         if 0 <= planner_action <= self.no_actions: # Make sure the planner action is legal        
             if planner_action == 0:
                 if (self.world.timestep - 1) % self.policy_interval == 0:
