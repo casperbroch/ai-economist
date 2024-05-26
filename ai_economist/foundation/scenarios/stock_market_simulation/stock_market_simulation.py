@@ -130,7 +130,6 @@ class StockMarketSimulation(BaseEnvironment):
         """
         # ! This is called AFTER the actions are made, so first we update the volumes at this timestep.
 
-        print(self.world.timestep)
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
         total_demand = 0
@@ -216,16 +215,16 @@ class StockMarketSimulation(BaseEnvironment):
 
         for agent in self.world.agents:
             obs_dict[agent.idx] = {
-                #"Endogenous-StockPriceHistory": agent.state["endogenous"]["StockPriceHistory"],
                 "Endogenous-StockPrice": agent.state["endogenous"]["StockPrice"],
+                "Endogenous-StockPricePrevious": agent.state["endogenous"]["StockPriceHistory"][self.step_indicator-1],
                 "Endogenous-StockPriceHigh": agent.state["endogenous"]["StockPriceHigh"],
                 "Endogenous-StockPriceLow": agent.state["endogenous"]["StockPriceLow"],
                 "Endogenous-TotalBalance": agent.state["endogenous"]["TotalBalance"],
                 "Endogenous-AvailableFunds": agent.state["endogenous"]["AvailableFunds"],
                 "Endogenous-Demand": agent.state["endogenous"]["Demand"],
                 "Endogenous-Supply": agent.state["endogenous"]["Supply"],
-                "Endogenous-TotalDemand": total_demand,
-                "Endogenous-TotalSupply": total_supply,
+                #"Endogenous-TotalDemand": total_demand,
+                #"Endogenous-TotalSupply": total_supply,
                 #"Endogenous-AbleToBuy": agent.state["endogenous"]["AbleToBuy"],
                 #"Endogenous-AbleToSell": agent.state["endogenous"]["AbleToSell"],
             }
