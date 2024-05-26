@@ -130,6 +130,7 @@ class StockMarketSimulation(BaseEnvironment):
         """
         # ! This is called AFTER the actions are made, so first we update the volumes at this timestep.
 
+        print(self.world.timestep)
         # Get total total supply/demand in order to determine stock price
         total_supply = 0
         total_demand = 0
