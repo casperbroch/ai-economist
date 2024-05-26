@@ -92,11 +92,11 @@ class StockMarketSimulation(BaseEnvironment):
 
         for agent in self.world.agents:
             # This will set all variables to 0
-            agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
+            #agent.state["endogenous"] = {k: 0.0 for k in agent.state["endogenous"].keys()}
             
             # Set able to buy/sell to 1 at the beginning
-            agent.state["endogenous"]["AbleToBuy"] = 1
-            agent.state["endogenous"]["AbleToSell"] = 1
+            #agent.state["endogenous"]["AbleToBuy"] = 1
+            #agent.state["endogenous"]["AbleToSell"] = 1
             
             # Set starting number of stocks left in rotation
             agent.state["endogenous"]["StocksLeft"] = self.stock_quantity
@@ -175,7 +175,6 @@ class StockMarketSimulation(BaseEnvironment):
         # Update market price
         self.market.nextstep(total_supply, total_demand, self.stock_quantity)
         
-        # Update values for agents
         for agent in self.world.agents:
             # Update price information
             agent.state["endogenous"]["StockPrice"] = self.market.getprice()
