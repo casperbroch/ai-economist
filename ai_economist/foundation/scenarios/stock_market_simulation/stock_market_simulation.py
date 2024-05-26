@@ -241,7 +241,7 @@ class StockMarketSimulation(BaseEnvironment):
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
             
             liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
-            stab = rewards.planner_reward_stab(self.step_indicator, prices, 5, self.base_std)
+            stab = rewards.planner_reward_stab(self.step_indicator, prices, 2, self.base_std)
 
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,

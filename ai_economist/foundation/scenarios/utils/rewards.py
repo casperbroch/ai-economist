@@ -142,7 +142,7 @@ def agent_reward_total(balance, max_balance):
 
 def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_importance=0.5):
     liq = planner_reward_liq(timestep, volumes, base_volume)
-    stab = planner_reward_stab(timestep, prices, 5, base_std)
+    stab = planner_reward_stab(timestep, prices, 2, base_std)
     #print("liq score ",liq)
     #print("stab score ",stab)
     
