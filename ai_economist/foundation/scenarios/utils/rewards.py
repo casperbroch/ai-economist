@@ -150,6 +150,7 @@ def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_i
     return reward
 
 def planner_reward_liq(timestep, volumes, base_volume=30):
+    timestep -= 1
     max_volume = max(volumes)
     
     if max_volume < base_volume:
