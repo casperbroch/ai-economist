@@ -237,12 +237,14 @@ class StockMarketSimulation(BaseEnvironment):
             
             #avg_balance = avg_balance / self.num_agents
             #abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
-            prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
+            prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             
             liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
             stab = rewards.planner_reward_stab(self.step_indicator, prices, 2, self.base_std)
 
+            print(self.world.timestep)
+            print("its liq reward for that is!", liq)
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,
                 "stability": stab,
@@ -332,6 +334,7 @@ class StockMarketSimulation(BaseEnvironment):
         # Optimization metric for the planner:
         volumes = agents[0].state["endogenous"]["Volumes"]
         prices = agents[0].state["endogenous"]["Volumes"]
+        
 
         curr_optimization_metric[
             self.world.planner.idx
