@@ -242,6 +242,10 @@ class StockMarketSimulation(BaseEnvironment):
             
             liq = rewards.planner_reward_liq(self.step_indicator, volumes, self.base_volume)
             stab = rewards.planner_reward_stab(self.step_indicator, prices, 2, self.base_std)
+            
+            abl = self.world.agents[0].state["endogenous"]["AbleToBuy"]
+            if abl and liq > 0.0:
+                print("something correct is happening")
 
             obs_dict[self.world.planner.idx] = {
                 "liquidity": liq,
