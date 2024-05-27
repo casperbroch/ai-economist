@@ -75,13 +75,13 @@ class StockMarketSimulation(BaseEnvironment):
         self.crash = False
         
         # Set time step of start of crash
-        self.random_stock_crash_start = 60#np.random.randint(10, 90)
+        self.random_stock_crash_start = 30#np.random.randint(10, 90)
         
         # Set initial crash intensity (between 10% and 30%)
         self.intensity_crash = 0.25#np.random.uniform(0.2, 0.3)
         
         # Set duration of crash (between 1 and 10 days)
-        self.duration_crash = 8#np.random.randint(4, 10)
+        self.duration_crash = 4#np.random.randint(4, 10)
 
         
         self.step_indicator = 0
