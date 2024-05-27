@@ -162,7 +162,11 @@ def planner_reward_liq(timestep, volumes, base_volume):
         curr_volume = sum(volumes[timestep-2:timestep+1]) / 3
     
     # Determine the maximum volume so far or the base volume, whichever is greater
+    print(volumes[:timestep+1])
     max_volume = max(volumes[:timestep+1])
+    
+    if base_volume > max_volume:
+        max_volume = base_volume
     
     if curr_volume == 0.0:
         return 0.0
