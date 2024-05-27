@@ -152,17 +152,14 @@ def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_i
 def planner_reward_liq(timestep, volumes, base_volume):
     timestep -= 1
     if timestep < 1:
-        # If timestep is 0, use only the current volume
-        curr_volume = volumes[timestep]
+        curr_volume = volumes[timestep-1]
     elif timestep < 2:
-        # If timestep is 1, use the average of the first two volumes
-        curr_volume = sum(volumes[:timestep+1]) / len(volumes[:timestep+1])
+        curr_volume = sum(volumes[:timestep]) / len(volumes[:timestep])
     else:
         # Otherwise, use the average of the current and the two previous volumes
-        curr_volume = sum(volumes[timestep-2:timestep+1]) / 3
+        curr_volume = sum(volumes[timestep-2:timestep]) / len(volumes[timestep-2:timestep])
     
     # Determine the maximum volume so far or the base volume, whichever is greater
-    print(volumes[:timestep+1])
     max_volume = max(volumes[:timestep+1])
     
     if base_volume > max_volume:
