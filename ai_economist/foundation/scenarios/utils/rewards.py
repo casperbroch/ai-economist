@@ -149,9 +149,8 @@ def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_i
     reward = (liq_importance * liq) - ((1-liq_importance) * stab)
     return reward
 
-def planner_reward_liq(timestep, volumes, window_size):
+def planner_reward_liq(timestep, volumes, base_volume):
     max_volume = max(volumes[:timestep+1])
-    base_volume = 30
     
     if max_volume < base_volume:
         max_volume = base_volume
