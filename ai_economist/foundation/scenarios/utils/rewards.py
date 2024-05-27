@@ -158,7 +158,9 @@ def planner_reward_liq(timestep, volumes, base_volume):
     timestep -= 1
         
     l = 2
-    if timestep<l+1:
+    if timestep == 0:
+        curr_volumes = [0]
+    elif timestep<l+1:
         curr_volumes = volumes[0:timestep+1]
     else:
         curr_volumes = volumes[timestep-l+1:timestep+1]
