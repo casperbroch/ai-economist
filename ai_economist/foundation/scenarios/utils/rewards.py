@@ -163,7 +163,6 @@ def planner_reward_liq(timestep, volumes, window_size):
         curr_volumes = volumes[0:timestep+1]
     else:
         curr_volumes = volumes[timestep-l+1:timestep+1]
-    print(curr_volumes)
     curr_volume = sum(curr_volumes) / len(curr_volumes)
     return curr_volume / max_volume
     
