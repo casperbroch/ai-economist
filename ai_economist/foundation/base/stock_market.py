@@ -23,6 +23,8 @@ class StockMarket:
         else:
             p = 0
             
+        print("p",p)
+        print("rr",random_return)
         self.price = self.price * (1 + (0.5*random_return + 0.05*p))
         
         
