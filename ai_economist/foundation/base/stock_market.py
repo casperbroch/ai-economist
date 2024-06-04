@@ -23,7 +23,7 @@ class StockMarket:
         else:
             p = 0
             
-        self.price = self.price * (1 + (0.5*random_return + 0.001*p))
+        self.price = self.price * (1 + (0.5*random_return + 0.05*p))
         
         
     def nextsteprandom(self):
