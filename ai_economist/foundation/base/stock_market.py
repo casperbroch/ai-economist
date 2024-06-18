@@ -3,6 +3,10 @@ import numpy as np
 import random
 import math
 
+# This class is created to simulate a stock market price
+# The stock market price can be affected by supply & demand and a random walk of a real-world stock market price history 
+# The real-world data is gathered from Yahoo Finance
+
 class StockMarket:
     transaction_cost = 0.0075
     

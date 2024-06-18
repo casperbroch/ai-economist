@@ -81,8 +81,7 @@ class StockMarketSimulation(BaseEnvironment):
         self.intensity_crash = 0.25#np.random.uniform(0.2, 0.3)
         
         # Set duration of crash (between 1 and 10 days)
-        self.duration_crash = 4#np.random.randint(4, 10)
-
+        self.duration_crash = 4#np.random.randint(2, 8)
         
         self.step_indicator = 0
         self.market = StockMarket("MSFT")
@@ -115,7 +114,6 @@ class StockMarketSimulation(BaseEnvironment):
             # Set first item of stockprice history to current stock price
             agent.state["endogenous"]["StockPriceHistory"] = np.zeros(self.stock_price_history_length)
             agent.state["endogenous"]["Volumes"] = np.zeros(self.stock_price_history_length)
-            
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             
 
@@ -146,7 +144,6 @@ class StockMarketSimulation(BaseEnvironment):
         
         
         # ! Now we enter the NEXT day and update the prices. 
-        
         self.step_indicator += 1
         
         able_to_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
@@ -179,10 +176,7 @@ class StockMarketSimulation(BaseEnvironment):
             agent.state["endogenous"]["StockPriceHistory"][self.step_indicator] = self.market.getprice()
             agent.state["endogenous"]["StockPriceHigh"] = np.amax(agent.state["endogenous"]["StockPriceHistory"])
             agent.state["endogenous"]["StockPriceLow"] = np.amin(agent.state["endogenous"]["StockPriceHistory"][agent.state["endogenous"]["StockPriceHistory"] != 0])
-
-            
-
-                    
+ 
         
 
     def generate_observations(self):
@@ -230,13 +224,6 @@ class StockMarketSimulation(BaseEnvironment):
             }
         
         if not self.static:
-            # OBSERVATIONS FOR PLANNER 
-            #avg_balance = 0.0
-            #for agent in self.world.agents:
-            #    avg_balance += agent.state["endogenous"]["TotalBalance"]
-            
-            #avg_balance = avg_balance / self.num_agents
-            #abl_trade = self.world.agents[0].state["endogenous"]["AbleToBuy"]
             volumes = self.world.agents[0].state["endogenous"]["Volumes"]
             prices = self.world.agents[0].state["endogenous"]["StockPriceHistory"]
             
