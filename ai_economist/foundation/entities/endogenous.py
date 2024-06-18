@@ -28,9 +28,91 @@ class Endogenous:
 
 endogenous_registry = Registry(Endogenous)
 
+    
+@endogenous_registry.add
+class TotalBalance(Endogenous):
+    """The amount of money a person holds (stocks + available funds)"""
+
+    name = "TotalBalance"
+    
+@endogenous_registry.add
+class AvailableFunds(Endogenous):
+    """The amount of available funds a person holds"""
+
+    name = "AvailableFunds"
+    
+@endogenous_registry.add
+class NumberOfStocks(Endogenous):
+    """The amount of stocks a person holds"""
+
+    name = "NumberOfStocks"
+    
+@endogenous_registry.add
+class StockPrice(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPrice"
+    
+@endogenous_registry.add
+class StockPriceHigh(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPriceHigh"
+    
+@endogenous_registry.add
+class StockPriceLow(Endogenous):
+    """The price of a stock"""
+
+    name = "StockPriceLow"
+    
+@endogenous_registry.add
+class StockPriceHistory(Endogenous):
+    """The history of the price of a stock"""
+
+    name = "StockPriceHistory"
+    
+@endogenous_registry.add
+class StocksLeft(Endogenous):
+    """The number of stocks left in the market to buy"""
+
+    name = "StocksLeft"
+    
+@endogenous_registry.add
+class Demand(Endogenous):
+    """The amount of demand a user has in this timestep for a certain stock"""
+
+    name = "Demand"
 
 @endogenous_registry.add
-class Labor(Endogenous):
-    """Labor accumulated through working. Included in all environments by default."""
+class Supply(Endogenous):
+    """The amount of supply a user has in this timestep for a certain stock"""
 
-    name = "Labor"
+    name = "Supply"
+
+@endogenous_registry.add
+class Volumes(Endogenous):
+    """Keeps track of the volumes (demand+supply)"""
+
+    name = "Volumes"
+
+@endogenous_registry.add
+class AbleToBuy(Endogenous):
+    """Determines if an agent is able to buy or not"""
+
+    name = "AbleToBuy"
+    
+@endogenous_registry.add
+class AbleToSell(Endogenous):
+    """Determines if an agent is able to sell or not"""
+
+    name = "AbleToSell"
+
+@endogenous_registry.add
+class StartingFunds(Endogenous):
+    """Used for computing the rewards"""
+
+    name = "StartingFunds"
+    
+    
+
+

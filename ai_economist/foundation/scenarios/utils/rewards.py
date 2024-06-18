@@ -5,6 +5,7 @@
 # or https://opensource.org/licenses/BSD-3-Clause
 
 import numpy as np
+import csv
 
 from ai_economist.foundation.scenarios.utils import social_metrics
 
@@ -131,3 +132,57 @@ def inv_income_weighted_utility(coin_endowments, utilities):
     pareto_weights = 1 / np.maximum(coin_endowments, 1)
     pareto_weights = pareto_weights / np.sum(pareto_weights)
     return np.sum(utilities * pareto_weights)
+
+
+def agent_reward_total(balance, max_balance):
+    balance_reward = balance/max_balance
+    reward = 0.5*balance_reward
+    return reward 
+
+
+def planner_reward_total(timestep, volumes, prices, base_volume, base_std, liq_importance=0.5):
+    liq = planner_reward_liq(timestep, volumes, base_volume)
+    stab = planner_reward_stab(timestep, prices, 2, base_std)
+    #print("liq score ",liq)
+    #print("stab score ",stab)
+    
+    reward = (liq_importance * liq) - ((1-liq_importance) * stab)
+    return reward
+
+def planner_reward_liq(timestep, volumes, base_volume):
+    if timestep < 1:
+        curr_volume = volumes[timestep-1]
+    elif timestep < 2:
+        curr_volume = sum(volumes[:timestep]) / len(volumes[:timestep])
+    else:
+        # Otherwise, use the average of the current and the two previous volumes
+        curr_volume = sum(volumes[timestep-2:timestep]) / len(volumes[timestep-2:timestep])
+    
+    # Determine the maximum volume so far or the base volume, whichever is greater
+    max_volume = max(volumes[:timestep+1])
+    
+    if base_volume > max_volume:
+        max_volume = base_volume
+    
+    if curr_volume == 0.0:
+        return 0.0
+    else:
+        return curr_volume / max_volume
+    
+
+def planner_reward_stab(timestep, prices, window_size, base_std=5):
+    if timestep < window_size - 1:
+        return 0.0
+    
+    rolling_stds = [np.std(prices[i:i+window_size]) for i in range(timestep - window_size + 2)]
+    current_std = rolling_stds[-1]
+    
+    max_std = max(rolling_stds)
+    
+    if max_std < base_std:
+        max_std = base_std
+    
+    normalized_std = current_std / max_std if max_std != 0 else 0  # Avoid division by zero
+    
+    return normalized_std
+
